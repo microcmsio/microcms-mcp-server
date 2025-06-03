@@ -47,11 +47,6 @@ Claude Desktop Configuration:
 `);
 }
 
-export function showVersion() {
-  // For now, just show the version directly
-  console.log('1.0.0');
-}
-
 export async function runCli() {
   try {
     const { values, positionals } = parseArgs({
@@ -68,22 +63,13 @@ export async function runCli() {
         'help': {
           type: 'boolean',
           short: 'h',
-        },
-        'version': {
-          type: 'boolean',
-          short: 'v',
-        },
+        }
       },
       allowPositionals: true,
     });
 
     if (values.help) {
       showHelp();
-      process.exit(0);
-    }
-
-    if (values.version) {
-      showVersion();
       process.exit(0);
     }
 
