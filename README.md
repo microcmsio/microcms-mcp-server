@@ -76,6 +76,36 @@ npm run start:args
 node dist/index.js --service-domain your-service-name --api-key your-api-key
 ```
 
+### Using with Claude Desktop
+
+Add the following to your Claude Desktop MCP configuration file:
+
+**macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+**Windows**: `%APPDATA%/Claude/claude_desktop_config.json`
+
+```json
+{
+  "mcpServers": {
+    "microcms-args": {
+      "comment": "Using command line arguments",
+      "command": "node",
+      "args": [
+        "/path/to/microcms-mcp-server/dist/index.js",
+        "--service-domain", "your-service-name",
+        "--api-key", "your-api-key"
+      ]
+    }
+  }
+}
+```
+
+Replace:
+- `/path/to/microcms-mcp-server/` with the actual path to this project
+- `your-service-name` with your microCMS service domain
+- `your-api-key` with your microCMS API key
+
+Restart Claude Desktop after updating the configuration.
+
 ### Development Mode
 
 ```bash

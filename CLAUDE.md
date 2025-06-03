@@ -4,7 +4,7 @@ microCMSのコンテンツを管理するMCPサーバー
 
 ## プロジェクト概要
 
-このプロジェクトは、microCMSのリスト形式APIを操作するためのModel Context Protocol (MCP) サーバーです。microCMS JS SDKの薄いラッパーとして機能し、Claude等のAIアシスタントがmicroCMSのコンテンツを読み書きできるようにします。
+このプロジェクトは、microCMSのリスト形式APIおよびマネジメントAPIを操作するためのModel Context Protocol (MCP) サーバーです。microCMS JS SDKを活用し、Claude等のAIアシスタントがmicroCMSのコンテンツとメディア管理を完全にサポートします。
 
 ## 技術スタック
 
@@ -16,8 +16,9 @@ microCMSのコンテンツを管理するMCPサーバー
 
 ## 機能
 
-### サポートするツール
+### サポートするツール（8つ）
 
+**コンテンツAPI:**
 1. **microcms_get_list** - コンテンツ一覧取得
 2. **microcms_get_content** - 個別コンテンツ取得
 3. **microcms_create_content** - コンテンツ作成
@@ -25,11 +26,38 @@ microCMSのコンテンツを管理するMCPサーバー
 5. **microcms_patch_content** - コンテンツ部分更新（PATCH）
 6. **microcms_delete_content** - コンテンツ削除
 
-### 環境変数
+**マネジメントAPI:**
+7. **microcms_get_media** - メディアファイル一覧取得
+8. **microcms_upload_media** - メディアファイルアップロード
 
+### 設定方法
+
+**環境変数:**
 ```bash
 MICROCMS_SERVICE_DOMAIN=your-service-name
 MICROCMS_API_KEY=your-api-key
+```
+
+**コマンドライン引数:**
+```bash
+node dist/index.js --service-domain your-service-name --api-key your-api-key
+```
+
+**Claude Desktop設定:**
+```json
+{
+  "mcpServers": {
+    "microcms-args": {
+      "comment": "Using command line arguments",
+      "command": "node",
+      "args": [
+        "/path/to/microcms-mcp-server/dist/index.js",
+        "--service-domain", "your-service-name",
+        "--api-key", "your-api-key"
+      ]
+    }
+  }
+}
 ```
 
 ## 実装要件
@@ -89,6 +117,20 @@ MICROCMS_API_KEY=your-api-key
 - `endpoint` (required): コンテンツタイプ名
 - `contentId` (required): コンテンツID
 
+#### 7. microcms_get_media
+**説明**: メディアファイル一覧を取得
+**パラメータ**:
+- `limit` (optional): 取得件数制限 (1-100)
+- `imageOnly` (optional): 画像ファイルのみ取得
+- `fileName` (optional): ファイル名による部分検索
+- `token` (optional): ページネーション用トークン (15秒有効)
+
+#### 8. microcms_upload_media
+**説明**: メディアファイルをアップロード
+**パラメータ**:
+- **方法1**: `fileData` + `fileName` + `mimeType` (Base64アップロード)
+- **方法2**: `externalUrl` (外部URLからアップロード)
+
 ### エラーハンドリング
 
 - microCMS APIのエラーレスポンスを適切にMCPエラーとして返す
@@ -101,19 +143,24 @@ MICROCMS_API_KEY=your-api-key
 microcms-mcp-server/
 ├── src/
 │   ├── index.ts          # MCPサーバーのエントリーポイント
-│   ├── tools/            # 各MCPツールの実装
-│   │   ├── get-list.ts
-│   │   ├── get-content.ts
-│   │   ├── create-content.ts
-│   │   ├── update-content.ts
-│   │   ├── patch-content.ts
-│   │   └── delete-content.ts
+│   ├── config.ts         # 設定管理
 │   ├── client.ts         # microCMSクライアント初期化
-│   └── types.ts          # 型定義
+│   ├── types.ts          # 型定義
+│   └── tools/            # 各MCPツールの実装
+│       ├── get-list.ts
+│       ├── get-content.ts
+│       ├── create-content.ts
+│       ├── update-content.ts
+│       ├── patch-content.ts
+│       ├── delete-content.ts
+│       ├── get-media.ts
+│       └── upload-media.ts
 ├── package.json
 ├── tsconfig.json
+├── .gitignore
 ├── README.md
-└── .env.example
+├── .env.example
+└── mcp-config-sample.json  # Claude Desktop設定例
 ```
 
 ### 開発・ビルド設定
@@ -128,12 +175,18 @@ microcms-mcp-server/
 
 ### 参考API仕様
 
+**コンテンツAPI:**
 - [コンテンツ一覧取得](https://document.microcms.io/content-api/get-list-contents)
 - [コンテンツ取得](https://document.microcms.io/content-api/get-content)
 - [コンテンツ作成](https://document.microcms.io/content-api/post-content)
 - [コンテンツ更新](https://document.microcms.io/content-api/put-content)
 - [コンテンツ部分更新](https://document.microcms.io/content-api/patch-content)
 - [コンテンツ削除](https://document.microcms.io/content-api/delete-content)
+
+**マネジメントAPI:**
+- [メディア取得](https://document.microcms.io/management-api/get-media-v2)
+- [メディアアップロード](https://document.microcms.io/management-api/post-media)
+- [JS SDK メディアアップロード](https://blog.microcms.io/js-sdk-management-api-upload-media/)
 
 ## 使用例
 
@@ -150,9 +203,22 @@ MCPクライアント（Claude等）から使用:
 - ブログ記事一覧取得: `microcms_get_list` (endpoint: "blogs")
 - 個別記事取得: `microcms_get_content` (endpoint: "blogs", contentId: "article-1")
 - 新規記事作成: `microcms_create_content` (endpoint: "blogs", content: {...})
+- メディア取得: `microcms_get_media` (limit: 10, imageOnly: true)
+- メディアアップロード: `microcms_upload_media` (fileData: "...", fileName: "image.jpg")
+
+## フィールドタイプ対応
+
+- **テキスト**: 文字列
+- **リッチエディタ**: HTML文字列
+- **画像**: microCMS asset URL文字列
+- **複数画像**: URL文字列の配列
+- **日付**: ISO 8601形式
+- **選択**: 文字列配列
+- **コンテンツ参照**: contentId文字列または配列
 
 ## 注意事項
 
-- リスト形式APIのみサポート
-- 画像・ファイルアップロード機能は含まない
+- リスト形式APIのみサポート（オブジェクト形式APIは未対応）
+- メディアアップロードは5MB制限
 - APIレート制限はmicroCMS側の制限に準拠
+- .envファイルには機密情報を含むため、Git管理対象外
