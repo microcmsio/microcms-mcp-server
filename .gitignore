@@ -11,8 +11,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Build outputs
-dist/
+# Build outputs (keep dist/ for npm package)
 build/
 
 # IDE and Editor files

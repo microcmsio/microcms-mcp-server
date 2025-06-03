@@ -23,7 +23,24 @@ A Model Context Protocol (MCP) server for microCMS API integration. This server 
 
 ## Installation
 
-1. Clone or download this repository
+### Method 1: Using npx (Recommended)
+
+No installation required! Use directly with npx:
+
+```bash
+npx microcms-mcp-server --service-domain your-service-name --api-key your-api-key
+```
+
+### Method 2: Global Installation
+
+```bash
+npm install -g microcms-mcp-server
+microcms-mcp-server --service-domain your-service-name --api-key your-api-key
+```
+
+### Method 3: Development Setup
+
+1. Clone this repository
 2. Install dependencies:
    ```bash
    npm install
@@ -83,11 +100,42 @@ Add the following to your Claude Desktop MCP configuration file:
 **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
 **Windows**: `%APPDATA%/Claude/claude_desktop_config.json`
 
+#### Option 1: Using npx (Recommended)
 ```json
 {
   "mcpServers": {
-    "microcms-args": {
-      "comment": "Using command line arguments",
+    "microcms": {
+      "command": "npx",
+      "args": [
+        "microcms-mcp-server",
+        "--service-domain", "your-service-name",
+        "--api-key", "your-api-key"
+      ]
+    }
+  }
+}
+```
+
+#### Option 2: Using global installation
+```json
+{
+  "mcpServers": {
+    "microcms": {
+      "command": "microcms-mcp-server",
+      "args": [
+        "--service-domain", "your-service-name",
+        "--api-key", "your-api-key"
+      ]
+    }
+  }
+}
+```
+
+#### Option 3: Using local development setup
+```json
+{
+  "mcpServers": {
+    "microcms": {
       "command": "node",
       "args": [
         "/path/to/microcms-mcp-server/dist/index.js",
@@ -100,9 +148,9 @@ Add the following to your Claude Desktop MCP configuration file:
 ```
 
 Replace:
-- `/path/to/microcms-mcp-server/` with the actual path to this project
 - `your-service-name` with your microCMS service domain
 - `your-api-key` with your microCMS API key
+- `/path/to/microcms-mcp-server/` with the actual path (Option 3 only)
 
 Restart Claude Desktop after updating the configuration.
 

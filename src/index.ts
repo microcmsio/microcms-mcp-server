@@ -104,7 +104,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   }
 });
 
-async function main() {
+export async function startServer() {
   try {
     // Validate configuration early to provide better error messages
     const { parseConfig } = await import('./config.js');
@@ -122,7 +122,14 @@ async function main() {
   }
 }
 
-main().catch((error) => {
-  console.error('Fatal error in main():', error);
-  process.exit(1);
-});
+async function main() {
+  await startServer();
+}
+
+// 直接実行された場合のみサーバーを起動
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main().catch((error) => {
+    console.error('Fatal error in main():', error);
+    process.exit(1);
+  });
+}

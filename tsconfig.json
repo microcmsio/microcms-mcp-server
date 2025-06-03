@@ -18,7 +18,8 @@
     "allowImportingTsExtensions": false
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "package.json"
   ],
   "exclude": [
     "node_modules",
