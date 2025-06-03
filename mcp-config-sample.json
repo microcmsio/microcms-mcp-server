@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "microcms-args": {
+      "comment": "Using command line arguments",
+      "command": "node",
+      "args": [
+        "/path/to/microcms-mcp-server/dist/index.js",
+        "--service-domain", "your-service-name",
+        "--api-key", "your-api-key"
+      ]
+    }
+  }
+}
