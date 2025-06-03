@@ -107,6 +107,7 @@ Add the following to your Claude Desktop MCP configuration file:
     "microcms": {
       "command": "npx",
       "args": [
+        "-y",
         "microcms-mcp-server",
         "--service-id", "your-service-id",
         "--api-key", "your-api-key"

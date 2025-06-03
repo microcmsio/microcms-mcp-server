@@ -33,6 +33,7 @@ Claude Desktop Configuration:
     "microcms": {
       "command": "npx",
       "args": [
+        "-y",
         "microcms-mcp-server",
         "--service-id", "your-service-id", 
         "--api-key", "your-api-key"
