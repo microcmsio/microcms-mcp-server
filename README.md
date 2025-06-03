@@ -28,14 +28,14 @@ A Model Context Protocol (MCP) server for microCMS API integration. This server 
 No installation required! Use directly with npx:
 
 ```bash
-npx microcms-mcp-server --service-domain your-service-name --api-key your-api-key
+npx microcms-mcp-server --service-id your-service-id --api-key your-api-key
 ```
 
 ### Method 2: Global Installation
 
 ```bash
 npm install -g microcms-mcp-server
-microcms-mcp-server --service-domain your-service-name --api-key your-api-key
+microcms-mcp-server --service-id your-service-id --api-key your-api-key
 ```
 
 ### Method 3: Development Setup
@@ -64,7 +64,7 @@ You can configure microCMS credentials in two ways:
 
 2. Configure your microCMS credentials in `.env`:
    ```bash
-   MICROCMS_SERVICE_DOMAIN=your-service-name
+   MICROCMS_SERVICE_ID=your-service-id
    MICROCMS_API_KEY=your-api-key
    ```
 
@@ -72,7 +72,7 @@ You can configure microCMS credentials in two ways:
 
 Pass credentials directly as command line arguments:
 ```bash
-node dist/index.js --service-domain your-service-name --api-key your-api-key
+node dist/index.js --service-id your-service-id --api-key your-api-key
 ```
 
 **Note**: Command line arguments take precedence over environment variables.
@@ -90,7 +90,7 @@ Using command line arguments:
 ```bash
 npm run start:args
 # or directly:
-node dist/index.js --service-domain your-service-name --api-key your-api-key
+node dist/index.js --service-id your-service-id --api-key your-api-key
 ```
 
 ### Using with Claude Desktop
@@ -108,7 +108,7 @@ Add the following to your Claude Desktop MCP configuration file:
       "command": "npx",
       "args": [
         "microcms-mcp-server",
-        "--service-domain", "your-service-name",
+        "--service-id", "your-service-id",
         "--api-key", "your-api-key"
       ]
     }
@@ -123,7 +123,7 @@ Add the following to your Claude Desktop MCP configuration file:
     "microcms": {
       "command": "microcms-mcp-server",
       "args": [
-        "--service-domain", "your-service-name",
+        "--service-id", "your-service-id",
         "--api-key", "your-api-key"
       ]
     }
@@ -139,7 +139,7 @@ Add the following to your Claude Desktop MCP configuration file:
       "command": "node",
       "args": [
         "/path/to/microcms-mcp-server/dist/index.js",
-        "--service-domain", "your-service-name",
+        "--service-id", "your-service-id",
         "--api-key", "your-api-key"
       ]
     }
@@ -148,7 +148,7 @@ Add the following to your Claude Desktop MCP configuration file:
 ```
 
 Replace:
-- `your-service-name` with your microCMS service domain
+- `your-service-id` with your microCMS service ID
 - `your-api-key` with your microCMS API key
 - `/path/to/microcms-mcp-server/` with the actual path (Option 3 only)
 

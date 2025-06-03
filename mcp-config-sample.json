@@ -5,7 +5,7 @@
       "command": "node",
       "args": [
         "/path/to/microcms-mcp-server/dist/index.js",
-        "--service-domain", "your-service-name",
+        "--service-id", "your-service-id",
         "--api-key", "your-api-key"
       ]
     }

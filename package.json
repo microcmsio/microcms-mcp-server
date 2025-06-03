@@ -17,7 +17,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "start:args": "node dist/index.js --service-domain your-service-name --api-key your-api-key",
+    "start:args": "node dist/index.js --service-id your-service-id --api-key your-api-key",
     "dev": "tsc --watch & node --watch dist/index.js",
     "lint": "eslint src/**/*.ts",
     "format": "prettier --write src/**/*.ts",

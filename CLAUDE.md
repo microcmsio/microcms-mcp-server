@@ -34,13 +34,13 @@ microCMSのコンテンツを管理するMCPサーバー
 
 **環境変数:**
 ```bash
-MICROCMS_SERVICE_DOMAIN=your-service-name
+MICROCMS_SERVICE_ID=your-service-id
 MICROCMS_API_KEY=your-api-key
 ```
 
 **コマンドライン引数:**
 ```bash
-node dist/index.js --service-domain your-service-name --api-key your-api-key
+node dist/index.js --service-id your-service-id --api-key your-api-key
 ```
 
 **Claude Desktop設定:**
@@ -52,7 +52,7 @@ node dist/index.js --service-domain your-service-name --api-key your-api-key
       "command": "node",
       "args": [
         "/path/to/microcms-mcp-server/dist/index.js",
-        "--service-domain", "your-service-name",
+        "--service-id", "your-service-id",
         "--api-key", "your-api-key"
       ]
     }
@@ -192,7 +192,7 @@ microcms-mcp-server/
 
 ```bash
 # 環境変数設定
-export MICROCMS_SERVICE_DOMAIN=my-blog
+export MICROCMS_SERVICE_ID=my-blog
 export MICROCMS_API_KEY=your-api-key
 
 # MCPサーバー起動

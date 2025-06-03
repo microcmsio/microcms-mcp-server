@@ -10,9 +10,9 @@ export function parseConfig(): Config {
   let serviceDomain: string | undefined;
   let apiKey: string | undefined;
   
-  const serviceDomainIndex = args.indexOf('--service-domain');
-  if (serviceDomainIndex !== -1 && serviceDomainIndex + 1 < args.length) {
-    serviceDomain = args[serviceDomainIndex + 1];
+  const serviceIdIndex = args.indexOf('--service-id');
+  if (serviceIdIndex !== -1 && serviceIdIndex + 1 < args.length) {
+    serviceDomain = args[serviceIdIndex + 1];
   }
   
   const apiKeyIndex = args.indexOf('--api-key');
@@ -21,14 +21,14 @@ export function parseConfig(): Config {
   }
   
   // Fallback to environment variables if not provided via command line
-  serviceDomain = serviceDomain || process.env.MICROCMS_SERVICE_DOMAIN;
+  serviceDomain = serviceDomain || process.env.MICROCMS_SERVICE_ID;
   apiKey = apiKey || process.env.MICROCMS_API_KEY;
   
   if (!serviceDomain || !apiKey) {
     throw new Error(
       'microCMS credentials are required. Provide them via:\n' +
-      '  Command line: --service-domain <domain> --api-key <key>\n' +
-      '  Environment variables: MICROCMS_SERVICE_DOMAIN and MICROCMS_API_KEY'
+      '  Command line: --service-id <service-id> --api-key <key>\n' +
+      '  Environment variables: MICROCMS_SERVICE_ID and MICROCMS_API_KEY'
     );
   }
   
