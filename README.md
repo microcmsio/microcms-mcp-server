@@ -1,6 +1,10 @@
 # microCMS MCP Server
 
-A Model Context Protocol (MCP) server for microCMS API integration. This server enables AI assistants like Claude to interact with microCMS content management system.
+A Model Context Protocol (MCP) server for microCMS API integration. This server enables AI assistants like Claude to interact with microCMS content management system.  
+
+[microCMS](https://microcms.io/)
+
+
 
 ## Features
 
