@@ -25,14 +25,6 @@ export const uploadMediaTool: Tool = {
         description: 'External URL of the file to upload (alternative to fileData)',
       },
     },
-    anyOf: [
-      {
-        required: ['fileData', 'fileName', 'mimeType']
-      },
-      {
-        required: ['externalUrl']
-      }
-    ],
   },
 };
 
@@ -52,7 +44,7 @@ export async function handleUploadMedia(params: MediaToolParameters) {
     if (fileData && fileName && mimeType) {
       // Convert base64 to buffer
       const buffer = Buffer.from(fileData, 'base64');
-      
+
       // Check file size (5MB limit)
       if (buffer.length > 5 * 1024 * 1024) {
         throw new Error('File size exceeds 5MB limit');
@@ -60,12 +52,12 @@ export async function handleUploadMedia(params: MediaToolParameters) {
 
       // Create Blob from buffer (for Node.js environment)
       const data = new Blob([buffer], { type: mimeType });
-      
+
       const result = await microCMSManagementClient.uploadMedia({
         data,
         name: fileName,
       });
-      
+
       return result;
     }
 
