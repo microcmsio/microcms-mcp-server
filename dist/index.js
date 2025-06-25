@@ -95,7 +95,7 @@ export async function startServer() {
         parseConfig();
         const transport = new StdioServerTransport();
         await server.connect(transport);
-        console.error('microCMS MCP Server running on stdio');
+        // console.error('microCMS MCP Server running on stdio');
     }
     catch (error) {
         if (error instanceof Error && error.message.includes('microCMS credentials')) {

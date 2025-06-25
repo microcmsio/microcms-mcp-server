@@ -22,14 +22,6 @@ export const uploadMediaTool = {
                 description: 'External URL of the file to upload (alternative to fileData)',
             },
         },
-        anyOf: [
-            {
-                required: ['fileData', 'fileName', 'mimeType']
-            },
-            {
-                required: ['externalUrl']
-            }
-        ],
     },
 };
 export async function handleUploadMedia(params) {

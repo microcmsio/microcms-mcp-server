@@ -91,7 +91,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    
+
     return {
       content: [
         {
@@ -109,10 +109,10 @@ export async function startServer() {
     // Validate configuration early to provide better error messages
     const { parseConfig } = await import('./config.js');
     parseConfig();
-    
+
     const transport = new StdioServerTransport();
     await server.connect(transport);
-    console.error('microCMS MCP Server running on stdio');
+    // console.error('microCMS MCP Server running on stdio');
   } catch (error) {
     if (error instanceof Error && error.message.includes('microCMS credentials')) {
       console.error('Configuration Error:', error.message);
