@@ -3,6 +3,9 @@
 [microCMS](https://microcms.io/) のMCP（Model Context Protocol）サーバーです。  
 ClaudeなどのAIアシスタントがmicroCMSのコンテンツ管理システムとやり取りできるようにします。
 
+<a href="https://glama.ai/mcp/servers/@himaratsu/microcms-mcp-server">
+  <img width="380" height="200" src="https://glama.ai/mcp/servers/@himaratsu/microcms-mcp-server/badge" alt="microCMS Server MCP server" />
+</a>
 
 ## 必要なもの
 
