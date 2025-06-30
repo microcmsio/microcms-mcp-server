@@ -108,11 +108,5 @@ export async function startServer() {
 async function main() {
     await startServer();
 }
-// 直接実行された場合のみサーバーを起動
-if (import.meta.url === `file://${process.argv[1]}`) {
-    main().catch((error) => {
-        console.error('Fatal error in main():', error);
-        process.exit(1);
-    });
-}
+main();
 //# sourceMappingURL=index.js.map
