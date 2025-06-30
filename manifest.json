@@ -1,0 +1,124 @@
+{
+  "dxt_version": "0.1",
+  "name": "microcms-mcp-server",
+  "version": "0.3.1",
+  "description": "microCMS MCP Server - A Model Context Protocol server for microCMS API",
+  "author": {
+    "name": "himaratsu",
+    "url": "https://github.com/himaratsu"
+  },
+  "server": {
+    "type": "node",
+    "entry_point": "dist/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": [
+        "${__dirname}/dist/index.js"
+      ],
+      "env": {
+        "MICROCMS_SERVICE_ID": "${user_config.MICROCMS_SERVICE_ID}",
+        "MICROCMS_API_KEY": "${user_config.MICROCMS_API_KEY}"
+      }
+    }
+  },
+  "tools": [
+    {
+      "name": "microcms_get_list",
+      "description": "Get a list of content from microCMS with filtering and search capabilities",
+      "parameters": {
+        "endpoint": "Content type name",
+        "limit": "Number of items to retrieve (1-100)",
+        "offset": "Starting position for pagination",
+        "q": "Full-text search query",
+        "filters": "Filter conditions"
+      }
+    },
+    {
+      "name": "microcms_get_content",
+      "description": "Get a specific content item from microCMS",
+      "parameters": {
+        "endpoint": "Content type name",
+        "contentId": "Content ID to retrieve"
+      }
+    },
+    {
+      "name": "microcms_create_content",
+      "description": "Create new content in microCMS",
+      "parameters": {
+        "endpoint": "Content type name",
+        "content": "Content data as JSON",
+        "isDraft": "Save as draft"
+      }
+    },
+    {
+      "name": "microcms_update_content",
+      "description": "Update content (full replacement) in microCMS",
+      "parameters": {
+        "endpoint": "Content type name",
+        "contentId": "Content ID to update",
+        "content": "Complete content data as JSON"
+      }
+    },
+    {
+      "name": "microcms_patch_content",
+      "description": "Partially update content in microCMS",
+      "parameters": {
+        "endpoint": "Content type name",
+        "contentId": "Content ID to update",
+        "content": "Partial content data as JSON"
+      }
+    },
+    {
+      "name": "microcms_delete_content",
+      "description": "Delete content from microCMS",
+      "parameters": {
+        "endpoint": "Content type name",
+        "contentId": "Content ID to delete"
+      }
+    },
+    {
+      "name": "microcms_get_media",
+      "description": "Get media files from microCMS",
+      "parameters": {
+        "limit": "Number of items (1-100)",
+        "imageOnly": "Get only image files",
+        "fileName": "Search by filename"
+      }
+    },
+    {
+      "name": "microcms_upload_media",
+      "description": "Upload media files to microCMS (max 5MB)",
+      "parameters": {
+        "fileData": "Base64 encoded file data",
+        "fileName": "File name with extension",
+        "mimeType": "MIME type",
+        "externalUrl": "External URL to upload from"
+      }
+    }
+  ],
+  "user_config": {
+    "MICROCMS_SERVICE_ID": {
+      "type": "string",
+      "title": "サービスID",
+      "description": "対象サービスのID。xxxx.microcms.io のxxxxにあたる部分です。",
+      "required": true,
+      "sensitive": false
+    },
+    "MICROCMS_API_KEY": {
+      "type": "string",
+      "title": "APIキー",
+      "description": "microCMSの管理画面で発行したAPIキーです。",
+      "required": true,
+      "sensitive": true
+    }
+  },
+  "keywords": [
+    "microcms",
+    "headlesscms"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/himaratsu/microcms-mcp-server.git"
+  }
+}
