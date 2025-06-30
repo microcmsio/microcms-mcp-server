@@ -7,10 +7,8 @@ import {
 
 import { getListTool, handleGetList } from './tools/get-list.js';
 import { getContentTool, handleGetContent } from './tools/get-content.js';
-import { createContentTool, handleCreateContent } from './tools/create-content.js';
 import { createContentPublishedTool, handleCreateContentPublished } from './tools/create-content-published.js';
 import { createContentDraftTool, handleCreateContentDraft } from './tools/create-content-draft.js';
-import { updateContentTool, handleUpdateContent } from './tools/update-content.js';
 import { updateContentPublishedTool, handleUpdateContentPublished } from './tools/update-content-published.js';
 import { updateContentDraftTool, handleUpdateContentDraft } from './tools/update-content-draft.js';
 import { patchContentTool, handlePatchContent } from './tools/patch-content.js';
@@ -37,10 +35,8 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
     tools: [
       getListTool,
       getContentTool,
-      createContentTool,
       createContentPublishedTool,
       createContentDraftTool,
-      updateContentTool,
       updateContentPublishedTool,
       updateContentDraftTool,
       patchContentTool,
@@ -65,17 +61,11 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       case 'microcms_get_content':
         result = await handleGetContent(params);
         break;
-      case 'microcms_create_content':
-        result = await handleCreateContent(params);
-        break;
       case 'microcms_create_content_published':
         result = await handleCreateContentPublished(params);
         break;
       case 'microcms_create_content_draft':
         result = await handleCreateContentDraft(params);
-        break;
-      case 'microcms_update_content':
-        result = await handleUpdateContent(params);
         break;
       case 'microcms_update_content_published':
         result = await handleUpdateContentPublished(params);

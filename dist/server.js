@@ -4,7 +4,11 @@ import { CallToolRequestSchema, ListToolsRequestSchema, } from '@modelcontextpro
 import { getListTool, handleGetList } from './tools/get-list.js';
 import { getContentTool, handleGetContent } from './tools/get-content.js';
 import { createContentTool, handleCreateContent } from './tools/create-content.js';
+import { createContentPublishedTool, handleCreateContentPublished } from './tools/create-content-published.js';
+import { createContentDraftTool, handleCreateContentDraft } from './tools/create-content-draft.js';
 import { updateContentTool, handleUpdateContent } from './tools/update-content.js';
+import { updateContentPublishedTool, handleUpdateContentPublished } from './tools/update-content-published.js';
+import { updateContentDraftTool, handleUpdateContentDraft } from './tools/update-content-draft.js';
 import { patchContentTool, handlePatchContent } from './tools/patch-content.js';
 import { deleteContentTool, handleDeleteContent } from './tools/delete-content.js';
 import { getMediaTool, handleGetMedia } from './tools/get-media.js';
@@ -24,7 +28,11 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             getListTool,
             getContentTool,
             createContentTool,
+            createContentPublishedTool,
+            createContentDraftTool,
             updateContentTool,
+            updateContentPublishedTool,
+            updateContentDraftTool,
             patchContentTool,
             deleteContentTool,
             getMediaTool,
@@ -47,8 +55,20 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             case 'microcms_create_content':
                 result = await handleCreateContent(params);
                 break;
+            case 'microcms_create_content_published':
+                result = await handleCreateContentPublished(params);
+                break;
+            case 'microcms_create_content_draft':
+                result = await handleCreateContentDraft(params);
+                break;
             case 'microcms_update_content':
                 result = await handleUpdateContent(params);
+                break;
+            case 'microcms_update_content_published':
+                result = await handleUpdateContentPublished(params);
+                break;
+            case 'microcms_update_content_draft':
+                result = await handleUpdateContentDraft(params);
                 break;
             case 'microcms_patch_content':
                 result = await handlePatchContent(params);

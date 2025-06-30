@@ -11,8 +11,7 @@
     "dist/",
     "bin/",
     "README.md",
-    "LICENSE",
-    "mcp-config-sample.json"
+    "LICENSE"
   ],
   "scripts": {
     "build": "tsc",
