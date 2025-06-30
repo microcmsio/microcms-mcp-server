@@ -1,6 +1,6 @@
 {
   "name": "microcms-mcp-server",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "microCMS MCP Server - A Model Context Protocol server for microCMS API",
   "main": "dist/index.js",
   "type": "module",
