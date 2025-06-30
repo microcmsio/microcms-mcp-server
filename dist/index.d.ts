@@ -1,3 +1,3 @@
 #!/usr/bin/env node
-export declare function startServer(): Promise<void>;
+export {};
 //# sourceMappingURL=index.d.ts.map

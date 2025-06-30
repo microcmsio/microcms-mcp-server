@@ -85,8 +85,8 @@ export async function runCli() {
             console.error('Run with --help for more information.');
             process.exit(1);
         }
-        // サーバーを起動（既存のロジックを使用）
-        const { startServer } = await import('./index.js');
+        // サーバーを起動
+        const { startServer } = await import('./server.js');
         await startServer();
     }
     catch (error) {
