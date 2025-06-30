@@ -1,10 +1,7 @@
 # microCMS MCP Server
 
-microCMSのコンテンツを管理するMCP（Model Context Protocol）サーバーです。
+[microCMS](https://microcms.io/) Context Protocol）サーバーです。  
 ClaudeなどのAIアシスタントがmicroCMSのコンテンツ管理システムとやり取りできるようにします。
-
-[microCMS](https://microcms.io/)
-
 
 
 ## 必要なもの
@@ -13,7 +10,7 @@ ClaudeなどのAIアシスタントがmicroCMSのコンテンツ管理システ�
 
 ## セットアップ
 
-### 方法1: Desktop Extension (DXT)
+### 方法1: Desktop Extension (DXT)をつかう
 
 Claude Desktopに導入する場合、dxtファイルを使って簡単にインストールできます。
 
@@ -23,7 +20,7 @@ Claude Desktopに導入する場合、dxtファイルを使って簡単にイン
 4. サービスIDとAPIキーを
 
 
-### 方法2: npx
+### 方法2: npx をつかう
 
 ```json
 {
@@ -47,35 +44,35 @@ Claude Desktopに導入する場合、dxtファイルを使って簡単にイン
 
 ## 利用方法
 
-### 1. 最初にmicroCMSのAPIスキーマを伝えます
+### 1. 最初にmicroCMSのAPIスキーマを伝える
 
 ```
-> これはmicroCMSのAPIスキーマです。内容を理解してください
+これはmicroCMSのAPIスキーマです。内容を理解してください
 ```
 
-APIスキーマは microCMSの管理画面 > API設定 からエクスポートできます。
+APIスキーマは [microCMSの管理画面 > API設定](https://document.microcms.io/manual/export-and-import-api-schema) からJSON形式でエクスポートできます。
 
 ### 2. microCMSからコンテンツを取得・入稿します
 
-#### microCMSのコンテンツを確認する
+microCMSのコンテンツを確認する
 ```
 microCMSの news から最新の記事を10件取得してください
 ```
 
-#### microCMSにコンテンツを作成して入稿する
+microCMSにコンテンツを作成して入稿する
 ```
 MCPサーバーの概要や利用例について調べ、それを1000文字程度でまとめてmicroCMSの blogs に入稿してください
 ```
 
-#### microCMSのコンテンツを取得してレビューしてもらう
+microCMSのコンテンツを取得してレビューしてもらう
 ```
 microCMSの xxxxxx のコンテンツを取得して、日本語的におかしい部分があれば指摘して
 ```
 
 
-### 詳しい使い方
+### より詳しい使い方
 
-こちらの記事で詳しい使い方を紹介しています。
+こちらの記事でより詳しい使い方を紹介しています。  
 [MCPサーバーからmicroCMSにコンテンツを入稿する | Zenn](https://zenn.dev/himara2/articles/14eb2260c4f0e4)
 
 ## ライセンス
