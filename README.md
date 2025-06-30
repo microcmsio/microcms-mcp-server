@@ -1,6 +1,6 @@
 # microCMS MCP Server
 
-[microCMS](https://microcms.io/) Context Protocol）サーバーです。  
+[microCMS](https://microcms.io/) のMCP（Model Context Protocol）サーバーです。  
 ClaudeなどのAIアシスタントがmicroCMSのコンテンツ管理システムとやり取りできるようにします。
 
 
