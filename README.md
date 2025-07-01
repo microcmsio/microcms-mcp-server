@@ -17,7 +17,7 @@ Claude Desktopに導入する場合、dxtファイルを使って簡単にイン
 1. [microcms-mcp-server.dxt](https://github.com/himaratsu/microcms-mcp-server/blob/main/microcms-mcp-server.dxt) をダウンロード
 2. Claude Desktopを起動し、設定 > エクステンション を開く
 3. ダウンロードしたdxtファイルをClaude Desktopにドラッグ＆ドロップ
-4. サービスIDとAPIキーを
+4. サービスIDとAPIキーを設定する
 
 
 ### 方法2: npx をつかう
