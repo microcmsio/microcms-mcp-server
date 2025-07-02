@@ -3,18 +3,17 @@
 [microCMS](https://microcms.io/) のMCP（Model Context Protocol）サーバーです。  
 ClaudeなどのAIアシスタントがmicroCMSのコンテンツ管理システムとやり取りできるようにします。
 
-
 ## 必要なもの
 
 - microCMSのサービスIDとAPIキー
 
 ## セットアップ
 
-### 方法1: Desktop Extension (DXT)をつかう
+### 方法1: Desktop Extension (DXT) をつかう
 
 Claude Desktopに導入する場合、dxtファイルを使って簡単にインストールできます。
 
-1. [microcms-mcp-server.dxt](https://github.com/himaratsu/microcms-mcp-server/blob/main/microcms-mcp-server.dxt) をダウンロード
+1. [リリースページ](https://github.com/microcmsio/microcms-mcp-server/releases) から最新の `microcms-mcp-server.dxt` をダウンロード
 2. Claude Desktopを起動し、設定 > エクステンション を開く
 3. ダウンロードしたdxtファイルをClaude Desktopにドラッグ＆ドロップ
 4. サービスIDとAPIキーを設定する
@@ -69,6 +68,14 @@ microCMSのコンテンツを取得してレビューしてもらう
 microCMSの xxxxxx のコンテンツを取得して、日本語的におかしい部分があれば指摘して
 ```
 
+microCMSのメディア一覧に画像をアップロードする
+```
+次の画像をmicroCMSにアップロードして。
+
+- https://example.com/sample-image-1.png
+- https://example.com/sample-image-2.png
+- https://example.com/sample-image-3.png
+```
 
 ### より詳しい使い方
 
