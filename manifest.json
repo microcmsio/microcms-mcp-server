@@ -5,8 +5,8 @@
   "description": "microCMSのMCP Serverです。LLMから直接コンテンツの取得や入稿ができます。",
   "icon": "assets/icon.png",
   "author": {
-    "name": "himaratsu",
-    "url": "https://github.com/himaratsu"
+    "name": "microcmsio",
+    "url": "https://github.com/microcmsio"
   },
   "server": {
     "type": "node",
@@ -120,6 +120,6 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/himaratsu/microcms-mcp-server.git"
+    "url": "git+https://github.com/microcmsio/microcms-mcp-server.git"
   }
 }
