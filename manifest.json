@@ -1,7 +1,7 @@
 {
   "dxt_version": "0.1",
   "name": "microcms-mcp-server",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "description": "microCMSのMCP Serverです。LLMから直接コンテンツの取得や入稿ができます。",
   "icon": "assets/icon.png",
   "author": {
