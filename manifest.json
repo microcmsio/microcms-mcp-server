@@ -1,7 +1,7 @@
 {
   "dxt_version": "0.1",
   "name": "microcms-mcp-server",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "description": "microCMSのMCP Serverです。LLMから直接コンテンツの取得や入稿ができます。",
   "icon": "assets/icon.png",
   "author": {
@@ -25,76 +25,35 @@
   "tools": [
     {
       "name": "microcms_get_list",
-      "description": "Get a list of content from microCMS with filtering and search capabilities",
-      "parameters": {
-        "endpoint": "Content type name",
-        "limit": "Number of items to retrieve (1-100)",
-        "offset": "Starting position for pagination",
-        "q": "Full-text search query",
-        "filters": "Filter conditions"
-      }
+      "description": "Get a list of content from microCMS with filtering and search capabilities"
     },
     {
       "name": "microcms_get_content",
-      "description": "Get a specific content item from microCMS",
-      "parameters": {
-        "endpoint": "Content type name",
-        "contentId": "Content ID to retrieve"
-      }
+      "description": "Get a specific content item from microCMS"
     },
     {
       "name": "microcms_create_content",
-      "description": "Create new content in microCMS",
-      "parameters": {
-        "endpoint": "Content type name",
-        "content": "Content data as JSON",
-        "isDraft": "Save as draft"
-      }
+      "description": "Create new content in microCMS"
     },
     {
       "name": "microcms_update_content",
-      "description": "Update content (full replacement) in microCMS",
-      "parameters": {
-        "endpoint": "Content type name",
-        "contentId": "Content ID to update",
-        "content": "Complete content data as JSON"
-      }
+      "description": "Update content (full replacement) in microCMS"
     },
     {
       "name": "microcms_patch_content",
-      "description": "Partially update content in microCMS",
-      "parameters": {
-        "endpoint": "Content type name",
-        "contentId": "Content ID to update",
-        "content": "Partial content data as JSON"
-      }
+      "description": "Partially update content in microCMS"
     },
     {
       "name": "microcms_delete_content",
-      "description": "Delete content from microCMS",
-      "parameters": {
-        "endpoint": "Content type name",
-        "contentId": "Content ID to delete"
-      }
+      "description": "Delete content from microCMS"
     },
     {
       "name": "microcms_get_media",
-      "description": "Get media files from microCMS",
-      "parameters": {
-        "limit": "Number of items (1-100)",
-        "imageOnly": "Get only image files",
-        "fileName": "Search by filename"
-      }
+      "description": "Get media files from microCMS"
     },
     {
       "name": "microcms_upload_media",
-      "description": "Upload media files to microCMS (max 5MB)",
-      "parameters": {
-        "fileData": "Base64 encoded file data",
-        "fileName": "File name with extension",
-        "mimeType": "MIME type",
-        "externalUrl": "External URL to upload from"
-      }
+      "description": "Upload media files to microCMS (max 5MB)"
     }
   ],
   "user_config": {
