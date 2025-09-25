@@ -1,7 +1,7 @@
 {
   "dxt_version": "0.1",
   "name": "microcms-mcp-server",
-  "version": "0.3.7",
+  "version": "0.4.0",
   "description": "microCMSのMCP Serverです。LLMから直接コンテンツの取得や入稿ができます。",
   "icon": "assets/icon.png",
   "author": {
@@ -53,7 +53,11 @@
     },
     {
       "name": "microcms_upload_media",
-      "description": "Upload media files to microCMS (max 5MB)"
+      "description": "Upload media files to microCMS"
+    },
+    {
+      "name": "microcms_get_api_info",
+      "description": "Get API information from microCMS"
     }
   ],
   "user_config": {

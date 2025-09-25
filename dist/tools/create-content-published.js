@@ -1,7 +1,7 @@
 import { create } from '../client.js';
 export const createContentPublishedTool = {
     name: 'microcms_create_content_published',
-    description: 'Create new content in microCMS and publish it immediately. Field type specifications: Image fields require URLs from the same microCMS service (e.g., "https://images.microcms-assets.io/assets/xxx/yyy/sample.png"), only the URL string is required. Multiple image fields use array format. Rich editor fields expect HTML strings. Date fields use ISO 8601 format. Select fields use arrays. Content reference fields use contentId strings or arrays for multiple references.',
+    description: 'Create new content in microCMS and publish it immediately. Field type specifications: Image fields require URLs from the same microCMS service (e.g., "https://images.microcms-assets.io/assets/xxx/yyy/sample.png"), only the URL string is required. Multiple image fields use array format. Rich editor fields expect HTML strings. Date fields use ISO 8601 format. Select fields use arrays. Content reference fields use contentId strings or arrays for multiple references, and you can get contentIds from microcms_get_list tool.',
     inputSchema: {
         type: 'object',
         properties: {
