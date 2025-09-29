@@ -39,4 +39,5 @@ export declare function patch<T = MicroCMSContent>(endpoint: string, contentId: 
     id: string;
 }>;
 export declare function deleteContent(endpoint: string, contentId: string): Promise<void>;
+export declare function getApiInfo(endpoint: string): Promise<any>;
 //# sourceMappingURL=client.d.ts.map

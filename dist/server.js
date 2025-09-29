@@ -11,6 +11,7 @@ import { patchContentTool, handlePatchContent } from './tools/patch-content.js';
 import { deleteContentTool, handleDeleteContent } from './tools/delete-content.js';
 import { getMediaTool, handleGetMedia } from './tools/get-media.js';
 import { uploadMediaTool, handleUploadMedia } from './tools/upload-media.js';
+import { getApiInfoTool, handleGetApiInfo } from './tools/get-api-info.js';
 const server = new Server({
     name: 'microcms-mcp-server',
     version: '1.0.0',
@@ -33,6 +34,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             deleteContentTool,
             getMediaTool,
             uploadMediaTool,
+            getApiInfoTool,
         ],
     };
 });
@@ -71,6 +73,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
                 break;
             case 'microcms_upload_media':
                 result = await handleUploadMedia(params);
+                break;
+            case 'microcms_get_api_info':
+                result = await handleGetApiInfo(params);
                 break;
             default:
                 throw new Error(`Unknown tool: ${name}`);
