@@ -84,7 +84,7 @@ microCMSのメディア一覧に画像をアップロードする
 
 以下の記事でより詳しい使い方を紹介しています。
 
-- [microCMSのMCPサーバーをリリースしました](https://blog.microcms.io/microcms-mcp-server/)
+- [microCMSのMCPサーバーをリリースしました | microCMSブログ](https://blog.microcms.io/microcms-mcp-server/)
 - [MCPサーバーからmicroCMSにコンテンツを入稿する | Zenn](https://zenn.dev/himara2/articles/14eb2260c4f0e4)
 
 ## ライセンス
