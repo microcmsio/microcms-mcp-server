@@ -38,7 +38,7 @@ jobs:
         echo "Building MCPB for version: $VERSION"
 
         # Create MCPB directly in project root (mcpb pack includes dependencies)
-        npx @anthropic-ai/mcpb pack
+        npx @anthropic-ai/mcpb@1.1.1 pack
 
         # Rename to include version
         mv microcms-mcp-server.mcpb microcms-mcp-server-v${VERSION}.mcpb
