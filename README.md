@@ -9,14 +9,13 @@ ClaudeなどのAIアシスタントがmicroCMSのコンテンツ管理システ�
 
 ## セットアップ
 
-### 方法1: Desktop Extension (DXT) をつかう
+### 方法1: MCP Bundle (旧DXTファイル) を使う
 
-Claude Desktopに導入する場合、dxtファイルを使って簡単にインストールできます。
+Claude Desktopに導入する場合、mcpbファイルを使って簡単にインストールできます。
 
-1. [リリースページ](https://github.com/microcmsio/microcms-mcp-server/releases) から最新の `microcms-mcp-server.dxt` をダウンロード
-2. Claude Desktopを起動し、設定 > エクステンション を開く
-3. ダウンロードしたdxtファイルをClaude Desktopにドラッグ＆ドロップ
-4. サービスIDとAPIキーを設定する
+1. [リリースページ](https://github.com/microcmsio/microcms-mcp-server/releases) から最新の `microcms-mcp-server.mcpb` をダウンロード
+2. ダウンロードしたmcpbファイルをダブルクリックで開く
+3. サービスIDとAPIキーを設定する
 
 
 ### 方法2: npx をつかう
