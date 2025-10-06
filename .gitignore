@@ -94,3 +94,5 @@ jspm_packages/
 # Temporary files
 *.tmp
 *.temp
+
+microcms-mcp-server.mcpb

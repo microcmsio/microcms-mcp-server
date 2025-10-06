@@ -1,7 +1,8 @@
 {
-  "dxt_version": "0.1",
+  "manifest_version": "0.2",
   "name": "microcms-mcp-server",
-  "version": "0.4.0",
+  "display_name": "microCMS MCP Server",
+  "version": "0.4.1",
   "description": "microCMSのMCP Serverです。LLMから直接コンテンツの取得や入稿ができます。",
   "icon": "assets/icon.png",
   "author": {
@@ -32,12 +33,20 @@
       "description": "Get a specific content item from microCMS"
     },
     {
-      "name": "microcms_create_content",
-      "description": "Create new content in microCMS"
+      "name": "microcms_create_content_published",
+      "description": "Create new published content in microCMS"
     },
     {
-      "name": "microcms_update_content",
-      "description": "Update content (full replacement) in microCMS"
+      "name": "microcms_create_content_draft",
+      "description": "Create new draft content in microCMS"
+    },
+    {
+      "name": "microcms_update_content_published",
+      "description": "Update published content (full replacement) in microCMS"
+    },
+    {
+      "name": "microcms_update_content_draft",
+      "description": "Update draft content (full replacement) in microCMS"
     },
     {
       "name": "microcms_patch_content",
@@ -78,7 +87,10 @@
   },
   "keywords": [
     "microcms",
-    "headlesscms"
+    "headlesscms",
+    "mcp",
+    "ai",
+    "claude"
   ],
   "license": "MIT",
   "repository": {
