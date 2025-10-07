@@ -1,5 +1,6 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { create } from '../client.js';
+import { FIELD_FORMATS_DESCRIPTION } from '../constants.js';
 import type { ToolParameters, MicroCMSCreateOptions } from '../types.js';
 
 export const createContentPublishedTool: Tool = {
@@ -14,7 +15,8 @@ export const createContentPublishedTool: Tool = {
       },
       content: {
         type: 'object',
-        description: 'Content data to create (JSON object). Field formats: text="string", richEditor="<h1>HTML</h1>", image="https://images.microcms-assets.io/...", multipleImages=["url1","url2"], date="2020-04-23T14:32:38.163Z", select=["option1","option2"], contentReference="contentId" or ["id1","id2"].',
+        description:
+          'Content data to create (JSON object). ' + FIELD_FORMATS_DESCRIPTION,
       },
       contentId: {
         type: 'string',
