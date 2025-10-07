@@ -9,9 +9,7 @@ ClaudeなどのAIアシスタントがmicroCMSのコンテンツ管理システ�
 
 ## セットアップ
 
-### Claude Desktop
-
-#### 方法1: MCP Bundle (旧DXTファイル) を使う
+### 方法1: MCP Bundle (旧DXTファイル) を使う
 
 Claude Desktopに導入する場合、mcpbファイルを使って簡単にインストールできます。
 
@@ -19,9 +17,7 @@ Claude Desktopに導入する場合、mcpbファイルを使って簡単にイ�
 2. ダウンロードしたmcpbファイルをダブルクリックで開く
 3. サービスIDとAPIキーを設定する
 
-#### 方法2: npx をつかう
-
-`claude_desktop_config.json` ファイルに以下を追加します。詳細については、Claude Desktop [ドキュメンテーション](https://modelcontextprotocol.io/docs/develop/connect-local-servers)を参照してください。
+### 方法2: npx をつかう
 
 ```json
 {
@@ -40,7 +36,7 @@ Claude Desktopに導入する場合、mcpbファイルを使って簡単にイ�
 
 `<MICROCMS_SERVICE_ID>`, `<MICROCMS_API_KEY>` はご自身のものに置き換えてください。
 
-設定更新後、Claude Desktopを再起動してください。
+設定更新後はクライアントを再起動してください。
 
 ## 利用方法
 
