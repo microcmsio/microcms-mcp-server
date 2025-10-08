@@ -1,5 +1,6 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { update } from '../client.js';
+import { FIELD_FORMATS_DESCRIPTION } from '../constants.js';
 import type { ToolParameters, MicroCMSUpdateOptions } from '../types.js';
 
 export const updateContentDraftTool: Tool = {
@@ -18,7 +19,8 @@ export const updateContentDraftTool: Tool = {
       },
       content: {
         type: 'object',
-        description: 'Content data to update (JSON object). Field formats: text="string", richEditor="<h1>HTML</h1>", image="https://images.microcms-assets.io/...", multipleImages=["url1","url2"], date="2020-04-23T14:32:38.163Z", select=["option1","option2"], contentReference="contentId" or ["id1","id2"].',
+        description:
+          'Content data to update (JSON object). ' + FIELD_FORMATS_DESCRIPTION,
       },
     },
     required: ['endpoint', 'contentId', 'content'],
