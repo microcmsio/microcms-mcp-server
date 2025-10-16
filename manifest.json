@@ -2,7 +2,7 @@
   "manifest_version": "0.2",
   "name": "microcms-mcp-server",
   "display_name": "microCMS MCP Server",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "microCMSのMCP Serverです。LLMから直接コンテンツの取得や入稿ができます。",
   "icon": "assets/icon.png",
   "author": {
