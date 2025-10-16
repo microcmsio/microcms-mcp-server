@@ -16,6 +16,7 @@ import { deleteContentTool, handleDeleteContent } from './tools/delete-content.j
 import { getMediaTool, handleGetMedia } from './tools/get-media.js';
 import { uploadMediaTool, handleUploadMedia } from './tools/upload-media.js';
 import { getApiInfoTool, handleGetApiInfo } from './tools/get-api-info.js';
+import { getApiListTool, handleGetApiList } from './tools/get-apis-list.js';
 import type { ToolParameters, MediaToolParameters } from './types.js';
 
 const server = new Server(
@@ -45,6 +46,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       getMediaTool,
       uploadMediaTool,
       getApiInfoTool,
+      getApiListTool,
     ],
   };
 });
@@ -89,6 +91,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         break;
       case 'microcms_get_api_info':
         result = await handleGetApiInfo(params);
+        break;
+      case 'microcms_get_api_list':
+        result = await handleGetApiList(params);
         break;
       default:
         throw new Error(`Unknown tool: ${name}`);

@@ -108,3 +108,21 @@ export async function getApiInfo(endpoint: string): Promise<any> {
 
   return await response.json();
 }
+
+export async function getApiList(): Promise<any> {
+  const url = `https://${config.serviceDomain}.microcms-management.io/api/v1/apis`;
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'X-MICROCMS-API-KEY': config.apiKey,
+    },
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Failed to get API list: ${response.status} ${response.statusText} - ${errorText}`);
+  }
+
+  return await response.json();
+}
