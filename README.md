@@ -40,14 +40,6 @@ Claude Desktopに導入する場合、mcpbファイルを使って簡単にイ�
 
 ## 利用方法
 
-### 1. 操作を行いたいmicroCMSのAPIのエンドポイントを伝える
-
-```
-microCMSのarticleに対して操作を行いたいです
-```
-
-### 2. microCMSからコンテンツを取得・入稿します
-
 microCMSのコンテンツを確認する
 
 ```
