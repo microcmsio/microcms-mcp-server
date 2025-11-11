@@ -1,10 +1,11 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { create } from '../client.js';
 import type { ToolParameters, MicroCMSCreateOptions } from '../types.js';
+import { FIELD_FORMATS_DESCRIPTION } from '../constants.js';
 
 export const createContentDraftTool: Tool = {
   name: 'microcms_create_content_draft',
-  description: 'Create new content in microCMS as draft. Field type specifications: Image fields require URLs from the same microCMS service (e.g., "https://images.microcms-assets.io/assets/xxx/yyy/sample.png"), only the URL string is required. Multiple image fields use array format. Rich editor fields expect HTML strings. Date fields use ISO 8601 format. Select fields use arrays. Content reference fields use contentId strings or arrays for multiple references.',
+  description: FIELD_FORMATS_DESCRIPTION,
   inputSchema: {
     type: 'object',
     properties: {
@@ -14,7 +15,7 @@ export const createContentDraftTool: Tool = {
       },
       content: {
         type: 'object',
-        description: 'Content data to create (JSON object). Field formats: text="string", richEditor="<h1>HTML</h1>", image="https://images.microcms-assets.io/...", multipleImages=["url1","url2"], date="2020-04-23T14:32:38.163Z", select=["option1","option2"], contentReference="contentId" or ["id1","id2"].',
+        description: `Content data to create (JSON object). ` + FIELD_FORMATS_DESCRIPTION,
       },
       contentId: {
         type: 'string',
