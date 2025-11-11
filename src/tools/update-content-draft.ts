@@ -1,10 +1,11 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { update } from '../client.js';
 import type { ToolParameters, MicroCMSUpdateOptions } from '../types.js';
+import { FIELD_FORMATS_DESCRIPTION } from '../constants.js';
 
 export const updateContentDraftTool: Tool = {
   name: 'microcms_update_content_draft',
-  description: 'Update content in microCMS (PUT - full update) as draft. Field type specifications: Image fields require URLs from the same microCMS service (e.g., "https://images.microcms-assets.io/assets/xxx/yyy/sample.png"). Multiple image fields use array format. Rich editor fields expect HTML strings. Date fields use ISO 8601 format. Select fields use arrays. Content reference fields use contentId strings or arrays for multiple references.',
+  description: FIELD_FORMATS_DESCRIPTION,
   inputSchema: {
     type: 'object',
     properties: {
@@ -18,7 +19,7 @@ export const updateContentDraftTool: Tool = {
       },
       content: {
         type: 'object',
-        description: 'Content data to update (JSON object). Field formats: text="string", richEditor="<h1>HTML</h1>", image="https://images.microcms-assets.io/...", multipleImages=["url1","url2"], date="2020-04-23T14:32:38.163Z", select=["option1","option2"], contentReference="contentId" or ["id1","id2"].',
+        description: `Content data to update (JSON object). ` + FIELD_FORMATS_DESCRIPTION,
       },
     },
     required: ['endpoint', 'contentId', 'content'],
@@ -27,11 +28,11 @@ export const updateContentDraftTool: Tool = {
 
 export async function handleUpdateContentDraft(params: ToolParameters) {
   const { endpoint, contentId, content } = params;
-  
+
   if (!contentId) {
     throw new Error('contentId is required');
   }
-  
+
   if (!content) {
     throw new Error('content is required');
   }
