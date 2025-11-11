@@ -8,7 +8,7 @@ export const FIELD_FORMATS_DESCRIPTION = `
   
   ## Field type specifications
   
-  * Image fields require URLs from the same microCMS service (e.g., "https://images.microcms-assets.io/assets/xxx/yyy/sample.png"), only the URL string is required. 
+  * Image fields require URL string uploaded to microCMS media library (e.g., "https://images.microcms-assets.io/assets/xxx/yyy/sample.png"). 
   * Multiple image fields use array format. 
   * Rich editor fields expect HTML strings. 
   * Date fields use ISO 8601 format. 
