@@ -2,7 +2,7 @@
   "manifest_version": "0.2",
   "name": "microcms-mcp-server",
   "display_name": "microCMS MCP Server",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "microCMSのMCP Serverです。LLMから直接コンテンツの取得や入稿ができます。",
   "icon": "assets/icon.png",
   "author": {
@@ -29,8 +29,16 @@
       "description": "Get a list of content from microCMS with filtering and search capabilities"
     },
     {
+      "name": "microcms_get_list_meta",
+      "description": "Get a list of contents with metadata from microCMS Management API. Use ONLY when user message contains \"メタ\" or \"メタ情報\". Returns metadata like status, createdBy, updatedBy, reservationTime, closedAt, and customStatus."
+    },
+    {
       "name": "microcms_get_content",
       "description": "Get a specific content item from microCMS"
+    },
+    {
+      "name": "microcms_get_content_meta",
+      "description": "Get a specific content with metadata from microCMS Management API. Use ONLY when user message contains \"メタ\" or \"メタ情報\". Returns metadata like status, createdBy, updatedBy, reservationTime, closedAt, and customStatus."
     },
     {
       "name": "microcms_create_content_published",
@@ -53,6 +61,14 @@
       "description": "Partially update content in microCMS"
     },
     {
+      "name": "microcms_patch_content_status",
+      "description": "Change content publication status in microCMS (Management API). Can change status between PUBLISH and DRAFT"
+    },
+    {
+      "name": "microcms_patch_content_created_by",
+      "description": "Change content creator in microCMS (Management API). Updates the createdBy field of a content item to a specified member ID"
+    },
+    {
       "name": "microcms_delete_content",
       "description": "Delete content from microCMS"
     },
@@ -67,6 +83,18 @@
     {
       "name": "microcms_get_api_info",
       "description": "Get API information from microCMS"
+    },
+    {
+      "name": "microcms_get_api_list",
+      "description": "Get list of all available APIs (endpoints) from microCMS Management API"
+    },
+    {
+      "name": "microcms_get_member",
+      "description": "Get a specific member from microCMS Management API. Returns member information including ID, name, email, and MFA status"
+    },
+    {
+      "name": "microcms_delete_media",
+      "description": "Delete media files from microCMS (Management API). Supports deletion of both images and files"
     }
   ],
   "user_config": {

@@ -6,17 +6,23 @@ import {
 } from '@modelcontextprotocol/sdk/types.js';
 
 import { getListTool, handleGetList } from './tools/get-list.js';
+import { getListMetaTool, handleGetListMeta as handleGetListMeta } from './tools/get-list-meta.js';
 import { getContentTool, handleGetContent } from './tools/get-content.js';
+import { getContentMetaTool, handleGetContentMeta } from './tools/get-content-meta.js';
 import { createContentPublishedTool, handleCreateContentPublished } from './tools/create-content-published.js';
 import { createContentDraftTool, handleCreateContentDraft } from './tools/create-content-draft.js';
 import { updateContentPublishedTool, handleUpdateContentPublished } from './tools/update-content-published.js';
 import { updateContentDraftTool, handleUpdateContentDraft } from './tools/update-content-draft.js';
 import { patchContentTool, handlePatchContent } from './tools/patch-content.js';
+import { patchContentStatusTool, handlePatchContentStatus } from './tools/patch-content-status.js';
+import { patchContentCreatedByTool, handlePatchContentCreatedBy } from './tools/patch-content-created-by.js';
 import { deleteContentTool, handleDeleteContent } from './tools/delete-content.js';
 import { getMediaTool, handleGetMedia } from './tools/get-media.js';
 import { uploadMediaTool, handleUploadMedia } from './tools/upload-media.js';
+import { deleteMediaTool, handleDeleteMedia } from './tools/delete-media.js';
 import { getApiInfoTool, handleGetApiInfo } from './tools/get-api-info.js';
 import { getApiListTool, handleGetApiList } from './tools/get-apis-list.js';
+import { getMemberTool, handleGetMember } from './tools/get-member.js';
 import type { ToolParameters, MediaToolParameters } from './types.js';
 
 const server = new Server(
@@ -36,17 +42,23 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
   return {
     tools: [
       getListTool,
+      getListMetaTool,
       getContentTool,
+      getContentMetaTool,
       createContentPublishedTool,
       createContentDraftTool,
       updateContentPublishedTool,
       updateContentDraftTool,
       patchContentTool,
+      patchContentStatusTool,
+      patchContentCreatedByTool,
       deleteContentTool,
       getMediaTool,
       uploadMediaTool,
+      deleteMediaTool,
       getApiInfoTool,
       getApiListTool,
+      getMemberTool,
     ],
   };
 });
@@ -62,8 +74,14 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       case 'microcms_get_list':
         result = await handleGetList(params);
         break;
+      case 'microcms_get_list_meta':
+        result = await handleGetListMeta(params);
+        break;
       case 'microcms_get_content':
         result = await handleGetContent(params);
+        break;
+      case 'microcms_get_content_meta':
+        result = await handleGetContentMeta(params);
         break;
       case 'microcms_create_content_published':
         result = await handleCreateContentPublished(params);
@@ -80,6 +98,12 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       case 'microcms_patch_content':
         result = await handlePatchContent(params);
         break;
+      case 'microcms_patch_content_status':
+        result = await handlePatchContentStatus(params as ToolParameters & { status: 'PUBLISH' | 'DRAFT' });
+        break;
+      case 'microcms_patch_content_created_by':
+        result = await handlePatchContentCreatedBy(params as ToolParameters & { createdBy: string });
+        break;
       case 'microcms_delete_content':
         result = await handleDeleteContent(params);
         break;
@@ -89,11 +113,17 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       case 'microcms_upload_media':
         result = await handleUploadMedia(params as unknown as MediaToolParameters);
         break;
+      case 'microcms_delete_media':
+        result = await handleDeleteMedia(params as unknown as MediaToolParameters & { url: string });
+        break;
       case 'microcms_get_api_info':
         result = await handleGetApiInfo(params);
         break;
       case 'microcms_get_api_list':
         result = await handleGetApiList(params);
+        break;
+      case 'microcms_get_member':
+        result = await handleGetMember(params as ToolParameters & { memberId: string });
         break;
       default:
         throw new Error(`Unknown tool: ${name}`);
