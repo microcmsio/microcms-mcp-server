@@ -78,6 +78,10 @@ export interface ToolParameters {
   mimeType?: string;
   // Member parameters
   memberId?: string;
+  // Status parameters
+  status?: 'PUBLISH' | 'DRAFT';
+  // CreatedBy parameters
+  createdBy?: string;
 }
 
 export interface MediaToolParameters {

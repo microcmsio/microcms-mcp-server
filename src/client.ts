@@ -162,3 +162,95 @@ export async function deleteMedia(mediaUrl: string): Promise<{ id: string }> {
 
   return await response.json();
 }
+
+export async function patchContentStatus(
+  endpoint: string,
+  contentId: string,
+  status: 'PUBLISH' | 'DRAFT'
+): Promise<void> {
+  const url = `https://${config.serviceDomain}.microcms-management.io/api/v1/contents/${endpoint}/${contentId}/status`;
+
+  const response = await fetch(url, {
+    method: 'PATCH',
+    headers: {
+      'X-MICROCMS-API-KEY': config.apiKey,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ status: [status] }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Failed to patch content status: ${response.status} ${response.statusText} - ${errorText}`);
+  }
+}
+
+export async function patchContentCreatedBy(
+  endpoint: string,
+  contentId: string,
+  memberId: string
+): Promise<{ id: string }> {
+  const url = `https://${config.serviceDomain}.microcms-management.io/api/v1/contents/${endpoint}/${contentId}/createdBy`;
+
+  const response = await fetch(url, {
+    method: 'PATCH',
+    headers: {
+      'X-MICROCMS-API-KEY': config.apiKey,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ createdBy: memberId }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Failed to patch content createdBy: ${response.status} ${response.statusText} - ${errorText}`);
+  }
+
+  return await response.json();
+}
+
+export async function getListMeta(
+  endpoint: string,
+  options?: { limit?: number; offset?: number }
+): Promise<any> {
+  const queryParams = new URLSearchParams();
+  if (options?.limit) queryParams.append('limit', options.limit.toString());
+  if (options?.offset) queryParams.append('offset', options.offset.toString());
+
+  const url = `https://${config.serviceDomain}.microcms-management.io/api/v1/contents/${endpoint}${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'X-MICROCMS-API-KEY': config.apiKey,
+    },
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Failed to get contents list: ${response.status} ${response.statusText} - ${errorText}`);
+  }
+
+  return await response.json();
+}
+
+export async function getContentManagement(
+  endpoint: string,
+  contentId: string
+): Promise<any> {
+  const url = `https://${config.serviceDomain}.microcms-management.io/api/v1/contents/${endpoint}/${contentId}`;
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'X-MICROCMS-API-KEY': config.apiKey,
+    },
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Failed to get content: ${response.status} ${response.statusText} - ${errorText}`);
+  }
+
+  return await response.json();
+}
