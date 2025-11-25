@@ -49,6 +49,13 @@ export interface MicroCMSErrorResponse {
   }>;
 }
 
+export interface MemberInfo {
+  id: string;
+  name: string;
+  email: string;
+  mfa: boolean;
+}
+
 export interface ToolParameters {
   endpoint: string;
   contentId?: string;
@@ -69,6 +76,8 @@ export interface ToolParameters {
   token?: string;
   fileData?: string;
   mimeType?: string;
+  // Member parameters
+  memberId?: string;
 }
 
 export interface MediaToolParameters {
@@ -79,4 +88,5 @@ export interface MediaToolParameters {
   fileData?: string;
   mimeType?: string;
   externalUrl?: string;
+  url?: string;
 }

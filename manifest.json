@@ -67,6 +67,18 @@
     {
       "name": "microcms_get_api_info",
       "description": "Get API information from microCMS"
+    },
+    {
+      "name": "microcms_get_api_list",
+      "description": "Get list of all available APIs (endpoints) from microCMS Management API"
+    },
+    {
+      "name": "microcms_get_member",
+      "description": "Get a specific member from microCMS Management API. Returns member information including ID, name, email, and MFA status"
+    },
+    {
+      "name": "microcms_delete_media",
+      "description": "Delete media files from microCMS (Management API). Supports deletion of both images and files"
     }
   ],
   "user_config": {

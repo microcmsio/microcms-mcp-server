@@ -126,3 +126,39 @@ export async function getApiList(): Promise<any> {
 
   return await response.json();
 }
+
+export async function getMember(memberId: string): Promise<any> {
+  const url = `https://${config.serviceDomain}.microcms-management.io/api/v1/members/${memberId}`;
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'X-MICROCMS-API-KEY': config.apiKey,
+    },
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Failed to get member: ${response.status} ${response.statusText} - ${errorText}`);
+  }
+
+  return await response.json();
+}
+
+export async function deleteMedia(mediaUrl: string): Promise<{ id: string }> {
+  const url = `https://${config.serviceDomain}.microcms-management.io/api/v2/media?url=${encodeURIComponent(mediaUrl)}`;
+
+  const response = await fetch(url, {
+    method: 'DELETE',
+    headers: {
+      'X-MICROCMS-API-KEY': config.apiKey,
+    },
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Failed to delete media: ${response.status} ${response.statusText} - ${errorText}`);
+  }
+
+  return await response.json();
+}

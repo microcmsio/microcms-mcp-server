@@ -15,8 +15,10 @@ import { patchContentTool, handlePatchContent } from './tools/patch-content.js';
 import { deleteContentTool, handleDeleteContent } from './tools/delete-content.js';
 import { getMediaTool, handleGetMedia } from './tools/get-media.js';
 import { uploadMediaTool, handleUploadMedia } from './tools/upload-media.js';
+import { deleteMediaTool, handleDeleteMedia } from './tools/delete-media.js';
 import { getApiInfoTool, handleGetApiInfo } from './tools/get-api-info.js';
 import { getApiListTool, handleGetApiList } from './tools/get-apis-list.js';
+import { getMemberTool, handleGetMember } from './tools/get-member.js';
 import type { ToolParameters, MediaToolParameters } from './types.js';
 
 const server = new Server(
@@ -45,8 +47,10 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       deleteContentTool,
       getMediaTool,
       uploadMediaTool,
+      deleteMediaTool,
       getApiInfoTool,
       getApiListTool,
+      getMemberTool,
     ],
   };
 });
@@ -89,11 +93,17 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       case 'microcms_upload_media':
         result = await handleUploadMedia(params as unknown as MediaToolParameters);
         break;
+      case 'microcms_delete_media':
+        result = await handleDeleteMedia(params as unknown as MediaToolParameters & { url: string });
+        break;
       case 'microcms_get_api_info':
         result = await handleGetApiInfo(params);
         break;
       case 'microcms_get_api_list':
         result = await handleGetApiList(params);
+        break;
+      case 'microcms_get_member':
+        result = await handleGetMember(params as ToolParameters & { memberId: string });
         break;
       default:
         throw new Error(`Unknown tool: ${name}`);
