@@ -4,10 +4,16 @@ import type { ToolParameters } from '../types.js';
 
 export const getContentMetaTool: Tool = {
   name: 'microcms_get_content_meta',
-  description: 'Get a specific content with metadata from microCMS Management API. IMPORTANT: Use this tool ONLY when the user message contains "メタ" (meta) or "メタ情報" (metadata). This API returns metadata information such as status, createdBy, updatedBy, reservationTime, closedAt, and customStatus that are not available in the regular content API. For regular content retrieval, use microcms_get_content instead.',
+  description:
+    'Get a specific content with metadata from microCMS Management API. IMPORTANT: Use this tool ONLY when the user message contains "メタ" (meta) or "メタ情報" (metadata). This API returns metadata information such as status, createdBy, updatedBy, reservationTime, closedAt, and customStatus that are not available in the regular content API. For regular content retrieval, use microcms_get_content instead.',
   inputSchema: {
     type: 'object',
     properties: {
+      serviceId: {
+        type: 'string',
+        description:
+          'Service ID (required in multi-service mode, optional in single-service mode)',
+      },
       endpoint: {
         type: 'string',
         description: 'Content type name (e.g., "blogs", "news")',
@@ -21,7 +27,10 @@ export const getContentMetaTool: Tool = {
   },
 };
 
-export async function handleGetContentMeta(params: ToolParameters) {
+export async function handleGetContentMeta(
+  params: ToolParameters,
+  serviceId?: string
+) {
   const { endpoint, contentId } = params;
 
   if (!endpoint) {
@@ -32,6 +41,5 @@ export async function handleGetContentMeta(params: ToolParameters) {
     throw new Error('contentId is required');
   }
 
-  return await getContentManagement(endpoint, contentId);
+  return await getContentManagement(endpoint, contentId, serviceId);
 }
-

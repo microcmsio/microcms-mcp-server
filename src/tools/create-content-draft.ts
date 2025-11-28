@@ -9,13 +9,19 @@ export const createContentDraftTool: Tool = {
   inputSchema: {
     type: 'object',
     properties: {
+      serviceId: {
+        type: 'string',
+        description:
+          'Service ID (required in multi-service mode, optional in single-service mode)',
+      },
       endpoint: {
         type: 'string',
         description: 'Content type name (e.g., "blogs", "news")',
       },
       content: {
         type: 'object',
-        description: `Content data to create (JSON object). ` + FIELD_FORMATS_DESCRIPTION,
+        description:
+          `Content data to create (JSON object). ` + FIELD_FORMATS_DESCRIPTION,
       },
       contentId: {
         type: 'string',
@@ -26,7 +32,10 @@ export const createContentDraftTool: Tool = {
   },
 };
 
-export async function handleCreateContentDraft(params: ToolParameters) {
+export async function handleCreateContentDraft(
+  params: ToolParameters,
+  serviceId?: string
+) {
   const { endpoint, content, ...options } = params;
 
   if (!content) {
@@ -39,5 +48,5 @@ export async function handleCreateContentDraft(params: ToolParameters) {
 
   if (options.contentId) createOptions.contentId = options.contentId;
 
-  return await create(endpoint, content, createOptions);
+  return await create(endpoint, content, createOptions, serviceId);
 }

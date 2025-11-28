@@ -4,10 +4,16 @@ import type { ToolParameters } from '../types.js';
 
 export const patchContentCreatedByTool: Tool = {
   name: 'microcms_patch_content_created_by',
-  description: 'Change content creator in microCMS (Management API). Updates the createdBy field of a content item to a specified member ID. Member ID can be found in the member detail screen in the management console.',
+  description:
+    'Change content creator in microCMS (Management API). Updates the createdBy field of a content item to a specified member ID. Member ID can be found in the member detail screen in the management console.',
   inputSchema: {
     type: 'object',
     properties: {
+      serviceId: {
+        type: 'string',
+        description:
+          'Service ID (required in multi-service mode, optional in single-service mode)',
+      },
       endpoint: {
         type: 'string',
         description: 'Content type name (e.g., "blogs", "news")',
@@ -18,7 +24,8 @@ export const patchContentCreatedByTool: Tool = {
       },
       createdBy: {
         type: 'string',
-        description: 'Member ID to set as the creator. Member ID can be found in the member detail screen in the management console.',
+        description:
+          'Member ID to set as the creator. Member ID can be found in the member detail screen in the management console.',
       },
     },
     required: ['endpoint', 'contentId', 'createdBy'],
@@ -26,7 +33,8 @@ export const patchContentCreatedByTool: Tool = {
 };
 
 export async function handlePatchContentCreatedBy(
-  params: ToolParameters & { createdBy: string }
+  params: ToolParameters & { createdBy: string },
+  serviceId?: string
 ) {
   const { endpoint, contentId, createdBy } = params;
 
@@ -42,7 +50,14 @@ export async function handlePatchContentCreatedBy(
     throw new Error('createdBy is required');
   }
 
-  const result = await patchContentCreatedBy(endpoint, contentId, createdBy);
-  return { message: `Content ${contentId} creator changed to ${createdBy}`, id: result.id };
+  const result = await patchContentCreatedBy(
+    endpoint,
+    contentId,
+    createdBy,
+    serviceId
+  );
+  return {
+    message: `Content ${contentId} creator changed to ${createdBy}`,
+    id: result.id,
+  };
 }
-

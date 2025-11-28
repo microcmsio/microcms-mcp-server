@@ -1,3 +1,25 @@
+// Service configuration types
+export interface ServiceConfig {
+  id: string;        // サービスID (serviceDomain)
+  apiKey: string;    // APIキー
+}
+
+export type ConfigMode = 'single' | 'multi';
+
+export interface SingleServiceConfig {
+  mode: 'single';
+  serviceDomain: string;
+  apiKey: string;
+}
+
+export interface MultiServiceConfig {
+  mode: 'multi';
+  services: ServiceConfig[];
+}
+
+export type AppConfig = SingleServiceConfig | MultiServiceConfig;
+
+// microCMS API types
 export interface MicroCMSListOptions {
   draftKey?: string;
   limit?: number;
@@ -31,7 +53,7 @@ export interface MicroCMSContent {
   updatedAt: string;
   publishedAt?: string;
   revisedAt?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface MicroCMSListResponse<T = MicroCMSContent> {
@@ -59,7 +81,7 @@ export interface MemberInfo {
 export interface ToolParameters {
   endpoint: string;
   contentId?: string;
-  content?: Record<string, any>;
+  content?: Record<string, unknown>;
   draftKey?: string;
   limit?: number;
   offset?: number;
@@ -93,4 +115,54 @@ export interface MediaToolParameters {
   mimeType?: string;
   externalUrl?: string;
   url?: string;
+}
+
+// Management API types
+export interface ApiInfo {
+  apiName: string;
+  apiEndpoint: string;
+  apiType: string[];
+  apiFields: unknown[];
+  customFields?: unknown[];
+}
+
+export interface ApiListResponse {
+  apis: ApiInfo[];
+}
+
+export interface ContentMeta {
+  id: string;
+  status: string[];
+  createdBy?: string;
+  updatedBy?: string;
+  reservationTime?: string | null;
+  closedAt?: string | null;
+  customStatus?: unknown;
+  [key: string]: unknown;
+}
+
+export interface ContentMetaListResponse {
+  contents: ContentMeta[];
+  totalCount: number;
+  offset: number;
+  limit: number;
+}
+
+export interface MediaItem {
+  url: string;
+  width?: number;
+  height?: number;
+  fileName?: string;
+  fileSize?: number;
+  mimeType?: string;
+  createdAt: string;
+}
+
+export interface MediaListResponse {
+  media: MediaItem[];
+  token?: string;
+}
+
+export interface MediaUploadResponse {
+  url: string;
 }
