@@ -8,6 +8,11 @@ export const getListTool: Tool = {
   inputSchema: {
     type: 'object',
     properties: {
+      serviceId: {
+        type: 'string',
+        description:
+          'Service ID (required in multi-service mode, optional in single-service mode)',
+      },
       endpoint: {
         type: 'string',
         description: 'Content type name (e.g., "blogs", "news")',
@@ -58,11 +63,14 @@ export const getListTool: Tool = {
   },
 };
 
-export async function handleGetList(params: ToolParameters) {
+export async function handleGetList(
+  params: ToolParameters,
+  serviceId?: string
+) {
   const { endpoint, ...options } = params;
-  
+
   const queries: MicroCMSListOptions = {};
-  
+
   if (options.draftKey) queries.draftKey = options.draftKey;
   if (options.limit) queries.limit = options.limit;
   if (options.offset) queries.offset = options.offset;
@@ -73,5 +81,5 @@ export async function handleGetList(params: ToolParameters) {
   if (options.filters) queries.filters = options.filters;
   if (options.depth) queries.depth = options.depth;
 
-  return await getList(endpoint, queries);
+  return await getList(endpoint, queries, serviceId);
 }
