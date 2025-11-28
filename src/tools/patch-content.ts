@@ -1,7 +1,7 @@
-import { Tool } from '@modelcontextprotocol/sdk/types.js';
+import type { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { patch } from '../client.js';
-import type { ToolParameters, MicroCMSUpdateOptions } from '../types.js';
 import { FIELD_FORMATS_DESCRIPTION } from '../constants.js';
+import type { MicroCMSUpdateOptions, ToolParameters } from '../types.js';
 
 export const patchContentTool: Tool = {
   name: 'microcms_patch_content',

@@ -1,4 +1,8 @@
-import { createClient, createManagementClient, MicroCMSQueries } from 'microcms-js-sdk';
+import {
+  createClient,
+  createManagementClient,
+  type MicroCMSQueries,
+} from 'microcms-js-sdk';
 import { parseConfig } from './config.js';
 import type {
   ApiInfo,
@@ -107,7 +111,7 @@ export function hasService(serviceId: string): boolean {
  */
 export function getClientsForService(serviceId?: string): ServiceClients {
   ensureInitialized();
-  
+
   // Validate serviceId requirement based on mode
   if (!serviceId) {
     if (appConfig?.mode === 'multi') {
@@ -118,7 +122,7 @@ export function getClientsForService(serviceId?: string): ServiceClients {
     }
     return getDefaultClients();
   }
-  
+
   const clients = clientMap.get(serviceId);
   if (!clients) {
     const available = getServiceIds().join(', ');
@@ -153,16 +157,33 @@ function getDefaultClients(): ServiceClients {
 
 // Legacy exports for backward compatibility
 export const microCMSClient = {
-  getList: <T = MicroCMSContent>(params: { endpoint: string; queries?: MicroCMSQueries }) => {
+  getList: <T = MicroCMSContent>(params: {
+    endpoint: string;
+    queries?: MicroCMSQueries;
+  }) => {
     return getDefaultClients().client.getList<T>(params);
   },
-  getListDetail: <T = MicroCMSContent>(params: { endpoint: string; contentId: string; queries?: MicroCMSQueries }) => {
+  getListDetail: <T = MicroCMSContent>(params: {
+    endpoint: string;
+    contentId: string;
+    queries?: MicroCMSQueries;
+  }) => {
     return getDefaultClients().client.getListDetail<T>(params);
   },
-  create: (params: { endpoint: string; content: Record<string, unknown>; contentId?: string; isDraft?: boolean }) => {
+  create: (params: {
+    endpoint: string;
+    content: Record<string, unknown>;
+    contentId?: string;
+    isDraft?: boolean;
+  }) => {
     return getDefaultClients().client.create(params);
   },
-  update: (params: { endpoint: string; contentId: string; content: Record<string, unknown>; isDraft?: boolean }) => {
+  update: (params: {
+    endpoint: string;
+    contentId: string;
+    content: Record<string, unknown>;
+    isDraft?: boolean;
+  }) => {
     return getDefaultClients().client.update(params);
   },
   delete: (params: { endpoint: string; contentId: string }) => {
@@ -171,7 +192,15 @@ export const microCMSClient = {
 };
 
 export const microCMSManagementClient = {
-  uploadMedia: (params: { data: File | Blob } | { url: string; fileName?: string; customRequestHeaders?: Record<string, string> }) => {
+  uploadMedia: (
+    params:
+      | { data: File | Blob }
+      | {
+          url: string;
+          fileName?: string;
+          customRequestHeaders?: Record<string, string>;
+        }
+  ) => {
     // SDK types don't fully match API capabilities, type assertion required
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return getDefaultClients().managementClient.uploadMedia(params as any);
@@ -193,7 +222,9 @@ export async function getList<T = MicroCMSContent>(
   queries?: MicroCMSQueries,
   serviceId?: string
 ): Promise<MicroCMSListResponse<T>> {
-  const clients = serviceId ? getClientsForService(serviceId) : getDefaultClients();
+  const clients = serviceId
+    ? getClientsForService(serviceId)
+    : getDefaultClients();
   return await clients.client.getList<T>({
     endpoint,
     queries,
@@ -206,7 +237,9 @@ export async function getListDetail<T = MicroCMSContent>(
   queries?: MicroCMSQueries,
   serviceId?: string
 ): Promise<T> {
-  const clients = serviceId ? getClientsForService(serviceId) : getDefaultClients();
+  const clients = serviceId
+    ? getClientsForService(serviceId)
+    : getDefaultClients();
   return await clients.client.getListDetail<T>({
     endpoint,
     contentId,
@@ -216,11 +249,16 @@ export async function getListDetail<T = MicroCMSContent>(
 
 export async function create<T = MicroCMSContent>(
   endpoint: string,
-  content: Omit<T, 'id' | 'createdAt' | 'updatedAt' | 'publishedAt' | 'revisedAt'>,
+  content: Omit<
+    T,
+    'id' | 'createdAt' | 'updatedAt' | 'publishedAt' | 'revisedAt'
+  >,
   options?: { isDraft?: boolean; contentId?: string },
   serviceId?: string
 ): Promise<{ id: string }> {
-  const clients = serviceId ? getClientsForService(serviceId) : getDefaultClients();
+  const clients = serviceId
+    ? getClientsForService(serviceId)
+    : getDefaultClients();
   return await clients.client.create({
     endpoint,
     content,
@@ -231,11 +269,16 @@ export async function create<T = MicroCMSContent>(
 export async function update<T = MicroCMSContent>(
   endpoint: string,
   contentId: string,
-  content: Omit<T, 'id' | 'createdAt' | 'updatedAt' | 'publishedAt' | 'revisedAt'>,
+  content: Omit<
+    T,
+    'id' | 'createdAt' | 'updatedAt' | 'publishedAt' | 'revisedAt'
+  >,
   options?: { isDraft?: boolean },
   serviceId?: string
 ): Promise<{ id: string }> {
-  const clients = serviceId ? getClientsForService(serviceId) : getDefaultClients();
+  const clients = serviceId
+    ? getClientsForService(serviceId)
+    : getDefaultClients();
   return await clients.client.update({
     endpoint,
     contentId,
@@ -247,11 +290,15 @@ export async function update<T = MicroCMSContent>(
 export async function patch<T = MicroCMSContent>(
   endpoint: string,
   contentId: string,
-  content: Partial<Omit<T, 'id' | 'createdAt' | 'updatedAt' | 'publishedAt' | 'revisedAt'>>,
+  content: Partial<
+    Omit<T, 'id' | 'createdAt' | 'updatedAt' | 'publishedAt' | 'revisedAt'>
+  >,
   options?: { isDraft?: boolean },
   serviceId?: string
 ): Promise<{ id: string }> {
-  const clients = serviceId ? getClientsForService(serviceId) : getDefaultClients();
+  const clients = serviceId
+    ? getClientsForService(serviceId)
+    : getDefaultClients();
   return await clients.client.update({
     endpoint,
     contentId,
@@ -265,15 +312,22 @@ export async function deleteContent(
   contentId: string,
   serviceId?: string
 ): Promise<void> {
-  const clients = serviceId ? getClientsForService(serviceId) : getDefaultClients();
+  const clients = serviceId
+    ? getClientsForService(serviceId)
+    : getDefaultClients();
   return await clients.client.delete({
     endpoint,
     contentId,
   });
 }
 
-export async function getApiInfo(endpoint: string, serviceId?: string): Promise<ApiInfo> {
-  const clients = serviceId ? getClientsForService(serviceId) : getDefaultClients();
+export async function getApiInfo(
+  endpoint: string,
+  serviceId?: string
+): Promise<ApiInfo> {
+  const clients = serviceId
+    ? getClientsForService(serviceId)
+    : getDefaultClients();
   const url = `https://${clients.serviceDomain}.microcms-management.io/api/v1/apis/${endpoint}`;
 
   const response = await fetch(url, {
@@ -285,14 +339,18 @@ export async function getApiInfo(endpoint: string, serviceId?: string): Promise<
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`Failed to get API info: ${response.status} ${response.statusText} - ${errorText}`);
+    throw new Error(
+      `Failed to get API info: ${response.status} ${response.statusText} - ${errorText}`
+    );
   }
 
   return await response.json();
 }
 
 export async function getApiList(serviceId?: string): Promise<ApiListResponse> {
-  const clients = serviceId ? getClientsForService(serviceId) : getDefaultClients();
+  const clients = serviceId
+    ? getClientsForService(serviceId)
+    : getDefaultClients();
   const url = `https://${clients.serviceDomain}.microcms-management.io/api/v1/apis`;
 
   const response = await fetch(url, {
@@ -304,14 +362,21 @@ export async function getApiList(serviceId?: string): Promise<ApiListResponse> {
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`Failed to get API list: ${response.status} ${response.statusText} - ${errorText}`);
+    throw new Error(
+      `Failed to get API list: ${response.status} ${response.statusText} - ${errorText}`
+    );
   }
 
   return await response.json();
 }
 
-export async function getMember(memberId: string, serviceId?: string): Promise<MemberInfo> {
-  const clients = serviceId ? getClientsForService(serviceId) : getDefaultClients();
+export async function getMember(
+  memberId: string,
+  serviceId?: string
+): Promise<MemberInfo> {
+  const clients = serviceId
+    ? getClientsForService(serviceId)
+    : getDefaultClients();
   const url = `https://${clients.serviceDomain}.microcms-management.io/api/v1/members/${memberId}`;
 
   const response = await fetch(url, {
@@ -323,14 +388,21 @@ export async function getMember(memberId: string, serviceId?: string): Promise<M
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`Failed to get member: ${response.status} ${response.statusText} - ${errorText}`);
+    throw new Error(
+      `Failed to get member: ${response.status} ${response.statusText} - ${errorText}`
+    );
   }
 
   return await response.json();
 }
 
-export async function deleteMedia(mediaUrl: string, serviceId?: string): Promise<{ id: string }> {
-  const clients = serviceId ? getClientsForService(serviceId) : getDefaultClients();
+export async function deleteMedia(
+  mediaUrl: string,
+  serviceId?: string
+): Promise<{ id: string }> {
+  const clients = serviceId
+    ? getClientsForService(serviceId)
+    : getDefaultClients();
   const url = `https://${clients.serviceDomain}.microcms-management.io/api/v2/media?url=${encodeURIComponent(mediaUrl)}`;
 
   const response = await fetch(url, {
@@ -342,7 +414,9 @@ export async function deleteMedia(mediaUrl: string, serviceId?: string): Promise
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`Failed to delete media: ${response.status} ${response.statusText} - ${errorText}`);
+    throw new Error(
+      `Failed to delete media: ${response.status} ${response.statusText} - ${errorText}`
+    );
   }
 
   return await response.json();
@@ -354,7 +428,9 @@ export async function patchContentStatus(
   status: 'PUBLISH' | 'DRAFT',
   serviceId?: string
 ): Promise<void> {
-  const clients = serviceId ? getClientsForService(serviceId) : getDefaultClients();
+  const clients = serviceId
+    ? getClientsForService(serviceId)
+    : getDefaultClients();
   const url = `https://${clients.serviceDomain}.microcms-management.io/api/v1/contents/${endpoint}/${contentId}/status`;
 
   const response = await fetch(url, {
@@ -368,7 +444,9 @@ export async function patchContentStatus(
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`Failed to patch content status: ${response.status} ${response.statusText} - ${errorText}`);
+    throw new Error(
+      `Failed to patch content status: ${response.status} ${response.statusText} - ${errorText}`
+    );
   }
 }
 
@@ -378,7 +456,9 @@ export async function patchContentCreatedBy(
   memberId: string,
   serviceId?: string
 ): Promise<{ id: string }> {
-  const clients = serviceId ? getClientsForService(serviceId) : getDefaultClients();
+  const clients = serviceId
+    ? getClientsForService(serviceId)
+    : getDefaultClients();
   const url = `https://${clients.serviceDomain}.microcms-management.io/api/v1/contents/${endpoint}/${contentId}/createdBy`;
 
   const response = await fetch(url, {
@@ -392,7 +472,9 @@ export async function patchContentCreatedBy(
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`Failed to patch content createdBy: ${response.status} ${response.statusText} - ${errorText}`);
+    throw new Error(
+      `Failed to patch content createdBy: ${response.status} ${response.statusText} - ${errorText}`
+    );
   }
 
   return await response.json();
@@ -403,7 +485,9 @@ export async function getListMeta(
   options?: { limit?: number; offset?: number },
   serviceId?: string
 ): Promise<ContentMetaListResponse> {
-  const clients = serviceId ? getClientsForService(serviceId) : getDefaultClients();
+  const clients = serviceId
+    ? getClientsForService(serviceId)
+    : getDefaultClients();
   const queryParams = new URLSearchParams();
   if (options?.limit) queryParams.append('limit', options.limit.toString());
   if (options?.offset) queryParams.append('offset', options.offset.toString());
@@ -419,7 +503,9 @@ export async function getListMeta(
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`Failed to get contents list: ${response.status} ${response.statusText} - ${errorText}`);
+    throw new Error(
+      `Failed to get contents list: ${response.status} ${response.statusText} - ${errorText}`
+    );
   }
 
   return await response.json();
@@ -430,7 +516,9 @@ export async function getContentManagement(
   contentId: string,
   serviceId?: string
 ): Promise<ContentMeta> {
-  const clients = serviceId ? getClientsForService(serviceId) : getDefaultClients();
+  const clients = serviceId
+    ? getClientsForService(serviceId)
+    : getDefaultClients();
   const url = `https://${clients.serviceDomain}.microcms-management.io/api/v1/contents/${endpoint}/${contentId}`;
 
   const response = await fetch(url, {
@@ -442,7 +530,9 @@ export async function getContentManagement(
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`Failed to get content: ${response.status} ${response.statusText} - ${errorText}`);
+    throw new Error(
+      `Failed to get content: ${response.status} ${response.statusText} - ${errorText}`
+    );
   }
 
   return await response.json();
@@ -450,10 +540,17 @@ export async function getContentManagement(
 
 // Media functions with service support
 export async function getMedia(
-  params?: { limit?: number; imageOnly?: boolean; fileName?: string; token?: string },
+  params?: {
+    limit?: number;
+    imageOnly?: boolean;
+    fileName?: string;
+    token?: string;
+  },
   serviceId?: string
 ): Promise<MediaListResponse> {
-  const clients = serviceId ? getClientsForService(serviceId) : getDefaultClients();
+  const clients = serviceId
+    ? getClientsForService(serviceId)
+    : getDefaultClients();
   const queryParams = new URLSearchParams();
   if (params?.limit) queryParams.append('limit', params.limit.toString());
   if (params?.imageOnly) queryParams.append('imageOnly', 'true');
@@ -471,17 +568,27 @@ export async function getMedia(
   );
 
   if (!response.ok) {
-    throw new Error(`Media retrieval failed: ${response.status} ${response.statusText}`);
+    throw new Error(
+      `Media retrieval failed: ${response.status} ${response.statusText}`
+    );
   }
 
   return await response.json();
 }
 
 export async function uploadMedia(
-  params: { data: File | Blob; name?: string } | { url: string; fileName?: string; customRequestHeaders?: Record<string, string> },
+  params:
+    | { data: File | Blob; name?: string }
+    | {
+        url: string;
+        fileName?: string;
+        customRequestHeaders?: Record<string, string>;
+      },
   serviceId?: string
 ): Promise<MediaUploadResponse> {
-  const clients = serviceId ? getClientsForService(serviceId) : getDefaultClients();
+  const clients = serviceId
+    ? getClientsForService(serviceId)
+    : getDefaultClients();
   // SDK types don't fully match API capabilities, type assertion required
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return await clients.managementClient.uploadMedia(params as any);

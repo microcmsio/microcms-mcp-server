@@ -1,4 +1,4 @@
-import { Tool } from '@modelcontextprotocol/sdk/types.js';
+import type { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { getClientsForService } from '../client.js';
 import type { MediaToolParameters } from '../types.js';
 

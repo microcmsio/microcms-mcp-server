@@ -1,4 +1,4 @@
-import { Tool } from '@modelcontextprotocol/sdk/types.js';
+import type { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { getContentManagement } from '../client.js';
 import type { ToolParameters } from '../types.js';
 

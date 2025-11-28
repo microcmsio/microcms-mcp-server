@@ -82,10 +82,10 @@ export async function runCli() {
           type: 'string',
           short: 'k',
         },
-        'help': {
+        help: {
           type: 'boolean',
           short: 'h',
-        }
+        },
       },
       allowPositionals: true,
     });
@@ -106,19 +106,25 @@ export async function runCli() {
     // 設定の検証
     // MICROCMS_SERVICES が設定されている場合はマルチサービスモード（単一サービス設定は不要）
     const hasMultiServiceConfig = !!process.env.MICROCMS_SERVICES;
-    const hasSingleServiceConfig = !!(process.env.MICROCMS_SERVICE_ID && process.env.MICROCMS_API_KEY);
-    
+    const hasSingleServiceConfig = !!(
+      process.env.MICROCMS_SERVICE_ID && process.env.MICROCMS_API_KEY
+    );
+
     if (!hasMultiServiceConfig && !hasSingleServiceConfig) {
       console.error('Error: microCMS credentials are required.');
       console.error('');
       console.error('Provide them via:');
       console.error('  Single service mode:');
       console.error('    --service-id <service-id> --api-key <key>');
-      console.error('    or environment variables MICROCMS_SERVICE_ID and MICROCMS_API_KEY');
+      console.error(
+        '    or environment variables MICROCMS_SERVICE_ID and MICROCMS_API_KEY'
+      );
       console.error('');
       console.error('  Multi service mode:');
       console.error('    environment variable MICROCMS_SERVICES (JSON array)');
-      console.error('    Example: MICROCMS_SERVICES=\'[{"id":"blog","apiKey":"xxx"}]\'');
+      console.error(
+        '    Example: MICROCMS_SERVICES=\'[{"id":"blog","apiKey":"xxx"}]\''
+      );
       console.error('');
       console.error('Run with --help for more information.');
       process.exit(1);
@@ -127,7 +133,6 @@ export async function runCli() {
     // サーバーを起動
     const { startServer } = await import('./server.js');
     await startServer();
-
   } catch (error) {
     if (error instanceof Error) {
       console.error('Error:', error.message);

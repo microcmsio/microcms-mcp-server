@@ -1,7 +1,7 @@
-import { Tool } from '@modelcontextprotocol/sdk/types.js';
+import type { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { update } from '../client.js';
-import type { ToolParameters, MicroCMSUpdateOptions } from '../types.js';
 import { FIELD_FORMATS_DESCRIPTION } from '../constants.js';
+import type { MicroCMSUpdateOptions, ToolParameters } from '../types.js';
 
 export const updateContentDraftTool: Tool = {
   name: 'microcms_update_content_draft',
