@@ -1,4 +1,4 @@
-import { Tool } from '@modelcontextprotocol/sdk/types.js';
+import type { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { getClientsForService } from '../client.js';
 import type { MediaToolParameters } from '../types.js';
 
@@ -49,7 +49,9 @@ export async function handleUploadMedia(
     // Note: SDK types may not include 'url' property, but API supports it
     if (externalUrl) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const result = await clients.managementClient.uploadMedia({ url: externalUrl } as any);
+      const result = await clients.managementClient.uploadMedia({
+        url: externalUrl,
+      } as any);
       return result;
     }
 

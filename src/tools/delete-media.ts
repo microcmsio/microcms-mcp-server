@@ -1,4 +1,4 @@
-import { Tool } from '@modelcontextprotocol/sdk/types.js';
+import type { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { deleteMedia } from '../client.js';
 import type { MediaToolParameters } from '../types.js';
 

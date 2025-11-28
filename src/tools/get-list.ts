@@ -1,6 +1,6 @@
-import { Tool } from '@modelcontextprotocol/sdk/types.js';
+import type { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { getList } from '../client.js';
-import type { ToolParameters, MicroCMSListOptions } from '../types.js';
+import type { MicroCMSListOptions, ToolParameters } from '../types.js';
 
 export const getListTool: Tool = {
   name: 'microcms_get_list',

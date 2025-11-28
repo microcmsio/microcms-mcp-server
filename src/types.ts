@@ -1,7 +1,7 @@
 // Service configuration types
 export interface ServiceConfig {
-  id: string;        // サービスID (serviceDomain)
-  apiKey: string;    // APIキー
+  id: string; // サービスID (serviceDomain)
+  apiKey: string; // APIキー
 }
 
 export type ConfigMode = 'single' | 'multi';
