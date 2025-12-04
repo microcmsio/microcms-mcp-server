@@ -121,7 +121,6 @@ const server = new Server(
   {
     name: 'microcms-mcp-server',
     version: '1.0.0',
-    description: 'A Model Context Protocol server for microCMS API',
   },
   {
     capabilities: {
