@@ -50,7 +50,7 @@
   "homepage": "https://github.com/microcmsio/microcms-mcp-server#readme",
   "license": "MIT",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.0.0",
+    "@modelcontextprotocol/sdk": "^1.12.1",
     "microcms-js-sdk": "^3.1.2"
   },
   "devDependencies": {
