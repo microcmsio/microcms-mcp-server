@@ -1,4 +1,4 @@
-import { Tool } from '@modelcontextprotocol/sdk/types.js';
+import type { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { deleteContent } from '../client.js';
 import type { ToolParameters } from '../types.js';
 
@@ -8,6 +8,11 @@ export const deleteContentTool: Tool = {
   inputSchema: {
     type: 'object',
     properties: {
+      serviceId: {
+        type: 'string',
+        description:
+          'Service ID (required in multi-service mode, optional in single-service mode)',
+      },
       endpoint: {
         type: 'string',
         description: 'Content type name (e.g., "blogs", "news")',
@@ -21,13 +26,16 @@ export const deleteContentTool: Tool = {
   },
 };
 
-export async function handleDeleteContent(params: ToolParameters) {
+export async function handleDeleteContent(
+  params: ToolParameters,
+  serviceId?: string
+) {
   const { endpoint, contentId } = params;
-  
+
   if (!contentId) {
     throw new Error('contentId is required');
   }
 
-  await deleteContent(endpoint, contentId);
+  await deleteContent(endpoint, contentId, serviceId);
   return { message: `Content ${contentId} deleted successfully` };
 }
