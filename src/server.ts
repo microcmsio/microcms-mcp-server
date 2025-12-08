@@ -29,15 +29,17 @@ import {
 import { deleteMediaTool, handleDeleteMedia } from './tools/delete-media.js';
 import { getApiInfoTool, handleGetApiInfo } from './tools/get-api-info.js';
 import { getApiListTool, handleGetApiList } from './tools/get-apis-list.js';
+import { getContentTool, handleGetContent } from './tools/get-content.js';
 import {
   getContentMetaTool,
   handleGetContentMeta,
 } from './tools/get-content-meta.js';
-import { getContentTool, handleGetContent } from './tools/get-content.js';
-import { getListMetaTool, handleGetListMeta } from './tools/get-list-meta.js';
 import { getListTool, handleGetList } from './tools/get-list.js';
+import { getListMetaTool, handleGetListMeta } from './tools/get-list-meta.js';
 import { getMediaTool, handleGetMedia } from './tools/get-media.js';
 import { getMemberTool, handleGetMember } from './tools/get-member.js';
+import { getServicesTool, handleGetServices } from './tools/get-services.js';
+import { handlePatchContent, patchContentTool } from './tools/patch-content.js';
 import {
   handlePatchContentCreatedBy,
   patchContentCreatedByTool,
@@ -46,7 +48,6 @@ import {
   handlePatchContentStatus,
   patchContentStatusTool,
 } from './tools/patch-content-status.js';
-import { handlePatchContent, patchContentTool } from './tools/patch-content.js';
 import {
   handleUpdateContentDraft,
   updateContentDraftTool,
@@ -58,8 +59,9 @@ import {
 import { handleUploadMedia, uploadMediaTool } from './tools/upload-media.js';
 import type { ToolParameters } from './types.js';
 
-// Fixed tool list (18 tools)
+// Fixed tool list (19 tools)
 const tools = [
+  getServicesTool,
   getListTool,
   getListMetaTool,
   getContentTool,
@@ -80,12 +82,17 @@ const tools = [
   getMemberTool,
 ];
 
-// Tool handlers map
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// Tool handlers map - using 'any' for generic handler type that accepts multiple tool parameter types
 const toolHandlers: Record<
   string,
-  (params: any, serviceId?: string) => Promise<any>
+  (
+    // biome-ignore lint/suspicious/noExplicitAny: Generic handler type for multiple tools
+    params: any,
+    serviceId?: string
+    // biome-ignore lint/suspicious/noExplicitAny: Generic return type for multiple tools
+  ) => Promise<any>
 > = {
+  microcms_get_services: handleGetServices,
   microcms_get_list: handleGetList,
   microcms_get_list_meta: handleGetListMeta,
   microcms_get_content: handleGetContent,
@@ -160,11 +167,13 @@ server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
               apiEndpoint?: string;
               endpoint?: string;
               apiType?: string[];
+              type?: string;
             }) => ({
               name: api.apiName || api.name || '',
               endpoint: api.apiEndpoint || api.endpoint || '',
               type:
-                Array.isArray(api.apiType) && api.apiType.includes('LIST')
+                api.type === 'list' ||
+                (Array.isArray(api.apiType) && api.apiType.includes('LIST'))
                   ? 'list'
                   : 'object',
             })
