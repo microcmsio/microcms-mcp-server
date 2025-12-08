@@ -1,21 +1,21 @@
 import {
-  createClient,
-  createManagementClient,
-  type MicroCMSQueries,
+    createClient,
+    createManagementClient,
+    type MicroCMSQueries,
 } from 'microcms-js-sdk';
 import { parseConfig } from './config.js';
 import type {
-  ApiInfo,
-  ApiListResponse,
-  AppConfig,
-  ContentMeta,
-  ContentMetaListResponse,
-  MediaListResponse,
-  MediaUploadResponse,
-  MemberInfo,
-  MicroCMSContent,
-  MicroCMSListResponse,
-  ServiceConfig,
+    ApiInfo,
+    ApiListResponse,
+    AppConfig,
+    ContentMeta,
+    ContentMetaListResponse,
+    MediaListResponse,
+    MediaUploadResponse,
+    MemberInfo,
+    MicroCMSContent,
+    MicroCMSListResponse,
+    ServiceConfig,
 } from './types.js';
 
 // Use ReturnType to get actual client types from factory functions
