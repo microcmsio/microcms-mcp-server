@@ -20,7 +20,7 @@ export const getApiListTool: Tool = {
 };
 
 export async function handleGetApiList(
-  params: ToolParameters,
+  _params: ToolParameters,
   serviceId?: string
 ) {
   return await getApiList(serviceId);

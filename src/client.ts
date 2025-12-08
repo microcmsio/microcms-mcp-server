@@ -202,7 +202,7 @@ export const microCMSManagementClient = {
         }
   ) => {
     // SDK types don't fully match API capabilities, type assertion required
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: SDK type limitation
     return getDefaultClients().managementClient.uploadMedia(params as any);
   },
 };
@@ -590,6 +590,6 @@ export async function uploadMedia(
     ? getClientsForService(serviceId)
     : getDefaultClients();
   // SDK types don't fully match API capabilities, type assertion required
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: SDK type limitation
   return await clients.managementClient.uploadMedia(params as any);
 }

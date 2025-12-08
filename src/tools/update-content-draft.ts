@@ -24,8 +24,7 @@ export const updateContentDraftTool: Tool = {
       },
       content: {
         type: 'object',
-        description:
-          `Content data to update (JSON object). ` + FIELD_FORMATS_DESCRIPTION,
+        description: `Content data to update (JSON object). ${FIELD_FORMATS_DESCRIPTION}`,
       },
     },
     required: ['endpoint', 'contentId', 'content'],

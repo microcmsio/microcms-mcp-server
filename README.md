@@ -62,7 +62,8 @@ Claude Desktopに導入する場合、mcpbファイルを使って簡単にイ�
 
 - ツール名は単一サービスモードと同じ `microcms_*` 形式です
 - 各ツール呼び出し時に `serviceId` を指定してサービスを選択します
-- 設定済みサービスの一覧は `microcms://services` リソースで確認できます
+- 設定済みサービスの一覧は `microcms_get_services` ツールで確認できます
+- MCPリソース `microcms://services` からも同様の情報を取得できます
 
 #### 後方互換性
 

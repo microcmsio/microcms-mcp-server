@@ -20,8 +20,7 @@ export const createContentDraftTool: Tool = {
       },
       content: {
         type: 'object',
-        description:
-          `Content data to create (JSON object). ` + FIELD_FORMATS_DESCRIPTION,
+        description: `Content data to create (JSON object). ${FIELD_FORMATS_DESCRIPTION}`,
       },
       contentId: {
         type: 'string',

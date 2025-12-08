@@ -48,10 +48,10 @@ export async function handleUploadMedia(
     // Method 1: Upload from external URL
     // Note: SDK types may not include 'url' property, but API supports it
     if (externalUrl) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const result = await clients.managementClient.uploadMedia({
-        url: externalUrl,
-      } as any);
+      const result = await clients.managementClient.uploadMedia(
+        // biome-ignore lint/suspicious/noExplicitAny: SDK type limitation
+        { url: externalUrl } as any
+      );
       return result;
     }
 
