@@ -1,42 +1,57 @@
-import { Tool } from '@modelcontextprotocol/sdk/types.js';
-import { microCMSManagementClient } from '../client.js';
+import type { Tool } from '@modelcontextprotocol/sdk/types.js';
+import { getClientsForService } from '../client.js';
 import type { MediaToolParameters } from '../types.js';
 
 export const uploadMediaTool: Tool = {
   name: 'microcms_upload_media',
-  description: 'Upload media files to microCMS using JS SDK (Management API). Supports two methods: 1) Upload file data (base64) with filename and mimeType, 2) Upload from external URL. Returns microCMS asset URL. Requires media upload permissions. Available on Team, Business, Advanced, and Enterprise plans.',
+  description:
+    'Upload media files to microCMS using JS SDK (Management API). Supports two methods: 1) Upload file data (base64) with filename and mimeType, 2) Upload from external URL. Returns microCMS asset URL. Requires media upload permissions. Available on Team, Business, Advanced, and Enterprise plans.',
   inputSchema: {
     type: 'object',
     properties: {
+      serviceId: {
+        type: 'string',
+        description:
+          'Service ID (required in multi-service mode, optional in single-service mode)',
+      },
       fileData: {
         type: 'string',
         description: 'Base64 encoded file data (for direct file upload)',
       },
       fileName: {
         type: 'string',
-        description: 'File name with extension (e.g., "image.jpg", "document.pdf") - required when using fileData',
+        description:
+          'File name with extension (e.g., "image.jpg", "document.pdf") - required when using fileData',
       },
       mimeType: {
         type: 'string',
-        description: 'MIME type of the file (e.g., "image/jpeg", "application/pdf") - required when using fileData',
+        description:
+          'MIME type of the file (e.g., "image/jpeg", "application/pdf") - required when using fileData',
       },
       externalUrl: {
         type: 'string',
-        description: 'External URL of the file to upload (alternative to fileData)',
+        description:
+          'External URL of the file to upload (alternative to fileData)',
       },
     },
   },
 };
 
-export async function handleUploadMedia(params: MediaToolParameters) {
+export async function handleUploadMedia(
+  params: MediaToolParameters,
+  serviceId?: string
+) {
   const { fileData, fileName, mimeType, externalUrl } = params;
+  const clients = getClientsForService(serviceId);
 
   try {
     // Method 1: Upload from external URL
+    // Note: SDK types may not include 'url' property, but API supports it
     if (externalUrl) {
-      const result = await microCMSManagementClient.uploadMedia({
-        data: externalUrl,
-      });
+      const result = await clients.managementClient.uploadMedia(
+        // biome-ignore lint/suspicious/noExplicitAny: SDK type limitation
+        { url: externalUrl } as any
+      );
       return result;
     }
 
@@ -53,7 +68,7 @@ export async function handleUploadMedia(params: MediaToolParameters) {
       // Create Blob from buffer (for Node.js environment)
       const data = new Blob([buffer], { type: mimeType });
 
-      const result = await microCMSManagementClient.uploadMedia({
+      const result = await clients.managementClient.uploadMedia({
         data,
         name: fileName,
       });
@@ -61,7 +76,9 @@ export async function handleUploadMedia(params: MediaToolParameters) {
       return result;
     }
 
-    throw new Error('Either externalUrl or (fileData + fileName + mimeType) must be provided');
+    throw new Error(
+      'Either externalUrl or (fileData + fileName + mimeType) must be provided'
+    );
   } catch (error) {
     if (error instanceof Error) {
       throw new Error(`Media upload failed: ${error.message}`);

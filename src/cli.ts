@@ -1,10 +1,9 @@
 #!/usr/bin/env node
 
 import { parseArgs } from 'node:util';
-import { Server } from '@modelcontextprotocol/sdk/server/index.js';
-import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 
 export function showHelp() {
+  // eslint-disable-next-line no-console
   console.log(`
 microCMS MCP Server
 
@@ -14,34 +13,56 @@ Usage:
   npx microcms-mcp-server [options]
 
 Options:
-  --service-id <service-id>  microCMS service ID (required)
-  --api-key <key>           microCMS API key (required)
+  --service-id <service-id>  microCMS service ID (for single service mode)
+  --api-key <key>           microCMS API key (for single service mode)
   --help                    Show this help message
   --version                 Show version information
 
 Environment Variables:
-  MICROCMS_SERVICE_ID      Service ID (fallback)
-  MICROCMS_API_KEY         API key (fallback)
+  Single service mode:
+    MICROCMS_SERVICE_ID      Service ID
+    MICROCMS_API_KEY         API key
+
+  Multi service mode:
+    MICROCMS_SERVICES        JSON array of services
+                             Example: '[{"id":"blog","apiKey":"xxx"},{"id":"shop","apiKey":"yyy"}]'
 
 Examples:
+  # Single service mode
   npx microcms-mcp-server --service-id my-blog --api-key your-key
   
-  # Using environment variables
+  # Using environment variables (single service)
   export MICROCMS_SERVICE_ID=my-blog
   export MICROCMS_API_KEY=your-key
   npx microcms-mcp-server
 
-Claude Desktop Configuration:
+  # Multi service mode
+  export MICROCMS_SERVICES='[{"id":"blog","apiKey":"xxx"},{"id":"shop","apiKey":"yyy"}]'
+  npx microcms-mcp-server
+
+Claude Desktop Configuration (Single Service):
 {
   "mcpServers": {
     "microcms": {
       "command": "npx",
-      "args": [
-        "-y",
-        "microcms-mcp-server",
-        "--service-id", "your-service-id", 
-        "--api-key", "your-api-key"
-      ]
+      "args": ["-y", "microcms-mcp-server"],
+      "env": {
+        "MICROCMS_SERVICE_ID": "your-service-id",
+        "MICROCMS_API_KEY": "your-api-key"
+      }
+    }
+  }
+}
+
+Claude Desktop Configuration (Multi Service):
+{
+  "mcpServers": {
+    "microcms": {
+      "command": "npx",
+      "args": ["-y", "microcms-mcp-server"],
+      "env": {
+        "MICROCMS_SERVICES": "[{\\"id\\":\\"blog\\",\\"apiKey\\":\\"xxx\\"},{\\"id\\":\\"shop\\",\\"apiKey\\":\\"yyy\\"}]"
+      }
     }
   }
 }
@@ -50,7 +71,7 @@ Claude Desktop Configuration:
 
 export async function runCli() {
   try {
-    const { values, positionals } = parseArgs({
+    const { values } = parseArgs({
       args: process.argv.slice(2),
       options: {
         'service-id': {
@@ -61,10 +82,10 @@ export async function runCli() {
           type: 'string',
           short: 'k',
         },
-        'help': {
+        help: {
           type: 'boolean',
           short: 'h',
-        }
+        },
       },
       allowPositionals: true,
     });
@@ -83,12 +104,27 @@ export async function runCli() {
     }
 
     // 設定の検証
-    if (!process.env.MICROCMS_SERVICE_ID || !process.env.MICROCMS_API_KEY) {
+    // MICROCMS_SERVICES が設定されている場合はマルチサービスモード（単一サービス設定は不要）
+    const hasMultiServiceConfig = !!process.env.MICROCMS_SERVICES;
+    const hasSingleServiceConfig = !!(
+      process.env.MICROCMS_SERVICE_ID && process.env.MICROCMS_API_KEY
+    );
+
+    if (!hasMultiServiceConfig && !hasSingleServiceConfig) {
       console.error('Error: microCMS credentials are required.');
       console.error('');
       console.error('Provide them via:');
-      console.error('  --service-id <service-id> --api-key <key>');
-      console.error('  or environment variables MICROCMS_SERVICE_ID and MICROCMS_API_KEY');
+      console.error('  Single service mode:');
+      console.error('    --service-id <service-id> --api-key <key>');
+      console.error(
+        '    or environment variables MICROCMS_SERVICE_ID and MICROCMS_API_KEY'
+      );
+      console.error('');
+      console.error('  Multi service mode:');
+      console.error('    environment variable MICROCMS_SERVICES (JSON array)');
+      console.error(
+        '    Example: MICROCMS_SERVICES=\'[{"id":"blog","apiKey":"xxx"}]\''
+      );
       console.error('');
       console.error('Run with --help for more information.');
       process.exit(1);
@@ -97,7 +133,6 @@ export async function runCli() {
     // サーバーを起動
     const { startServer } = await import('./server.js');
     await startServer();
-
   } catch (error) {
     if (error instanceof Error) {
       console.error('Error:', error.message);

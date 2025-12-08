@@ -1,7 +1,7 @@
-import { Tool } from '@modelcontextprotocol/sdk/types.js';
+import type { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { patch } from '../client.js';
-import type { ToolParameters, MicroCMSUpdateOptions } from '../types.js';
 import { FIELD_FORMATS_DESCRIPTION } from '../constants.js';
+import type { MicroCMSUpdateOptions, ToolParameters } from '../types.js';
 
 export const patchContentTool: Tool = {
   name: 'microcms_patch_content',
@@ -9,6 +9,11 @@ export const patchContentTool: Tool = {
   inputSchema: {
     type: 'object',
     properties: {
+      serviceId: {
+        type: 'string',
+        description:
+          'Service ID (required in multi-service mode, optional in single-service mode)',
+      },
       endpoint: {
         type: 'string',
         description: 'Content type name (e.g., "blogs", "news")',
@@ -19,7 +24,9 @@ export const patchContentTool: Tool = {
       },
       content: {
         type: 'object',
-        description: `Partial content data to update (JSON object). ` + FIELD_FORMATS_DESCRIPTION,
+        description:
+          `Partial content data to update (JSON object). ` +
+          FIELD_FORMATS_DESCRIPTION,
       },
       isDraft: {
         type: 'boolean',
@@ -30,7 +37,10 @@ export const patchContentTool: Tool = {
   },
 };
 
-export async function handlePatchContent(params: ToolParameters) {
+export async function handlePatchContent(
+  params: ToolParameters,
+  serviceId?: string
+) {
   const { endpoint, contentId, content, ...options } = params;
 
   if (!contentId) {
@@ -45,5 +55,5 @@ export async function handlePatchContent(params: ToolParameters) {
 
   if (options.isDraft !== undefined) updateOptions.isDraft = options.isDraft;
 
-  return await patch(endpoint, contentId, content, updateOptions);
+  return await patch(endpoint, contentId, content, updateOptions, serviceId);
 }

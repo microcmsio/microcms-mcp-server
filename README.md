@@ -17,7 +17,7 @@ Claude Desktopに導入する場合、mcpbファイルを使って簡単にイ�
 2. ダウンロードしたmcpbファイルをダブルクリックで開く
 3. サービスIDとAPIキーを設定する
 
-### 方法2: npx をつかう
+### 方法2: npx をつかう（単一サービス）
 
 ```json
 {
@@ -37,6 +37,43 @@ Claude Desktopに導入する場合、mcpbファイルを使って簡単にイ�
 `<MICROCMS_SERVICE_ID>`, `<MICROCMS_API_KEY>` はご自身のものに置き換えてください。
 
 設定更新後はクライアントを再起動してください。
+
+### 方法3: 複数サービスを使う
+
+複数のmicroCMSサービスに接続する場合は、`MICROCMS_SERVICES` 環境変数にJSON形式でサービス情報を設定します。
+
+```json
+{
+  "mcpServers": {
+    "microcms-multi": {
+      "command": "npx",
+      "args": ["-y", "microcms-mcp-server@latest"],
+      "env": {
+        "MICROCMS_SERVICES": "[{\"id\":\"blog\",\"apiKey\":\"xxx-api-key\"},{\"id\":\"shop\",\"apiKey\":\"yyy-api-key\"}]"
+      }
+    }
+  }
+}
+```
+
+#### 複数サービスモードの動作
+
+複数サービスモードでは、各ツールに `serviceId` パラメータが必須になります。
+
+- ツール名は単一サービスモードと同じ `microcms_*` 形式です
+- 各ツール呼び出し時に `serviceId` を指定してサービスを選択します
+- 設定済みサービスの一覧は `microcms_get_services` ツールで確認できます
+- MCPリソース `microcms://services` からも同様の情報を取得できます
+
+#### 後方互換性
+
+| 設定方法 | モード | serviceIdパラメータ |
+|---------|-------|-------------------|
+| `MICROCMS_SERVICE_ID` + `MICROCMS_API_KEY` | 単一サービス | 省略可（自動でデフォルトサービスを使用） |
+| `MICROCMS_SERVICES` (JSON) | 複数サービス | 必須 |
+
+- 従来の環境変数設定をそのまま使う場合、serviceIdを指定せずに今まで通り動作します
+- 両方の設定が存在する場合、`MICROCMS_SERVICES` が優先されます
 
 ## 利用方法
 
@@ -66,6 +103,49 @@ microCMSのメディア一覧に画像をアップロードする
 - https://example.com/sample-image-1.png
 - https://example.com/sample-image-2.png
 - https://example.com/sample-image-3.png
+```
+
+### 複数サービスモードでの使用例
+
+複数サービスモードでは、サービスIDを指定して各サービスを操作できます。
+
+```
+blogサービスの記事一覧を取得して
+```
+
+```
+shopサービスに新しい商品を追加して
+```
+
+```
+blogの最新記事をshopの商品説明にコピーして
+```
+
+#### サービス一覧の確認
+
+`microcms://services` リソースを読み取ることで、設定済みサービスと各サービスのAPI（エンドポイント）一覧を確認できます。AIエージェントはこの情報を使って、指定されたendpointがどのサービスに属するか判断できます。
+
+```json
+{
+  "mode": "multi",
+  "description": "Multi service mode - serviceId parameter is required for all tools. Use the serviceId that contains the endpoint you need.",
+  "services": [
+    {
+      "id": "blog",
+      "apis": [
+        { "name": "ブログ記事", "endpoint": "blogs", "type": "list" },
+        { "name": "カテゴリー", "endpoint": "categories", "type": "list" }
+      ]
+    },
+    {
+      "id": "shop",
+      "apis": [
+        { "name": "商品", "endpoint": "products", "type": "list" },
+        { "name": "注文", "endpoint": "orders", "type": "list" }
+      ]
+    }
+  ]
+}
 ```
 
 ### より詳しい使い方
