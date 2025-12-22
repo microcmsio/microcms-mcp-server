@@ -94,3 +94,28 @@ export interface MediaToolParameters {
   externalUrl?: string;
   url?: string;
 }
+
+// Bulk create types
+export interface BulkCreateItem {
+  content: Record<string, any>;
+  contentId?: string;
+}
+
+export interface BulkCreateResultItem {
+  index: number;
+  success: boolean;
+  id?: string;
+  error?: string;
+}
+
+export interface BulkCreateResult {
+  totalCount: number;
+  successCount: number;
+  failureCount: number;
+  results: BulkCreateResultItem[];
+}
+
+export interface BulkToolParameters {
+  endpoint: string;
+  contents: BulkCreateItem[];
+}

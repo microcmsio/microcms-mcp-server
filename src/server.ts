@@ -23,7 +23,13 @@ import { deleteMediaTool, handleDeleteMedia } from './tools/delete-media.js';
 import { getApiInfoTool, handleGetApiInfo } from './tools/get-api-info.js';
 import { getApiListTool, handleGetApiList } from './tools/get-apis-list.js';
 import { getMemberTool, handleGetMember } from './tools/get-member.js';
-import type { ToolParameters, MediaToolParameters } from './types.js';
+import {
+  createContentsBulkPublishedTool,
+  createContentsBulkDraftTool,
+  handleCreateContentsBulkPublished,
+  handleCreateContentsBulkDraft,
+} from './tools/create-contents-bulk.js';
+import type { ToolParameters, MediaToolParameters, BulkToolParameters } from './types.js';
 
 const server = new Server(
   {
@@ -47,6 +53,8 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       getContentMetaTool,
       createContentPublishedTool,
       createContentDraftTool,
+      createContentsBulkPublishedTool,
+      createContentsBulkDraftTool,
       updateContentPublishedTool,
       updateContentDraftTool,
       patchContentTool,
@@ -88,6 +96,12 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         break;
       case 'microcms_create_content_draft':
         result = await handleCreateContentDraft(params);
+        break;
+      case 'microcms_create_contents_bulk_published':
+        result = await handleCreateContentsBulkPublished(params as unknown as BulkToolParameters);
+        break;
+      case 'microcms_create_contents_bulk_draft':
+        result = await handleCreateContentsBulkDraft(params as unknown as BulkToolParameters);
         break;
       case 'microcms_update_content_published':
         result = await handleUpdateContentPublished(params);

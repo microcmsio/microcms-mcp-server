@@ -2,7 +2,7 @@
   "manifest_version": "0.2",
   "name": "microcms-mcp-server",
   "display_name": "microCMS MCP Server",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "microCMSのMCP Serverです。LLMから直接コンテンツの取得や入稿ができます。",
   "icon": "assets/icon.png",
   "author": {
@@ -47,6 +47,14 @@
     {
       "name": "microcms_create_content_draft",
       "description": "Create new draft content in microCMS"
+    },
+    {
+      "name": "microcms_create_contents_bulk_published",
+      "description": "Create multiple contents at once and publish them immediately in microCMS"
+    },
+    {
+      "name": "microcms_create_contents_bulk_draft",
+      "description": "Create multiple contents at once as drafts in microCMS"
     },
     {
       "name": "microcms_update_content_published",
