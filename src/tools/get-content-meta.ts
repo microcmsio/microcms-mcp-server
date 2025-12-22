@@ -35,3 +35,4 @@ export async function handleGetContentMeta(params: ToolParameters) {
   return await getContentManagement(endpoint, contentId);
 }
 
+
