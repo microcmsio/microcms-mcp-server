@@ -1,9 +1,11 @@
 #!/usr/bin/env node
 
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 
 export function showHelp() {
-  // eslint-disable-next-line no-console
   console.log(`
 microCMS MCP Server
 
@@ -15,6 +17,9 @@ Usage:
 Options:
   --service-id <service-id>  microCMS service ID (for single service mode)
   --api-key <key>           microCMS API key (for single service mode)
+  --transport <mode>        Transport mode: "stdio" (default) or "http"
+  --port <port>             HTTP server port (default: 3000)
+  --host <host>             HTTP server host (default: 0.0.0.0)
   --help                    Show this help message
   --version                 Show version information
 
@@ -27,20 +32,29 @@ Environment Variables:
     MICROCMS_SERVICES        JSON array of services
                              Example: '[{"id":"blog","apiKey":"xxx"},{"id":"shop","apiKey":"yyy"}]'
 
-Examples:
-  # Single service mode
-  npx microcms-mcp-server --service-id my-blog --api-key your-key
-  
-  # Using environment variables (single service)
-  export MICROCMS_SERVICE_ID=my-blog
-  export MICROCMS_API_KEY=your-key
-  npx microcms-mcp-server
+  Transport:
+    MCP_TRANSPORT            Transport mode: "stdio" or "http"
+    MCP_HTTP_PORT            HTTP server port
+    MCP_HTTP_HOST            HTTP server host
 
-  # Multi service mode
+  Authentication (HTTP mode):
+    MCP_AUTH_TOKEN            Bearer token for HTTP authentication
+
+Examples:
+  # Local single service (stdio, default)
+  npx microcms-mcp-server --service-id my-blog --api-key your-key
+
+  # Local multi service (stdio)
   export MICROCMS_SERVICES='[{"id":"blog","apiKey":"xxx"},{"id":"shop","apiKey":"yyy"}]'
   npx microcms-mcp-server
 
-Claude Desktop Configuration (Single Service):
+  # Remote single service (HTTP)
+  npx microcms-mcp-server --service-id my-blog --api-key xxx --transport http --port 3000
+
+  # Remote multi service (HTTP with auth)
+  MCP_AUTH_TOKEN=my-secret npx microcms-mcp-server --transport http
+
+Claude Desktop Configuration (Single Service, stdio):
 {
   "mcpServers": {
     "microcms": {
@@ -54,7 +68,7 @@ Claude Desktop Configuration (Single Service):
   }
 }
 
-Claude Desktop Configuration (Multi Service):
+Claude Desktop Configuration (Multi Service, stdio):
 {
   "mcpServers": {
     "microcms": {
@@ -63,6 +77,20 @@ Claude Desktop Configuration (Multi Service):
       "env": {
         "MICROCMS_SERVICES": "[{\\"id\\":\\"blog\\",\\"apiKey\\":\\"xxx\\"},{\\"id\\":\\"shop\\",\\"apiKey\\":\\"yyy\\"}]"
       }
+    }
+  }
+}
+
+Claude Desktop Configuration (Remote via mcp-remote):
+{
+  "mcpServers": {
+    "microcms-remote": {
+      "command": "npx",
+      "args": [
+        "-y", "mcp-remote",
+        "http://your-server:3000/mcp",
+        "--header", "Authorization:Bearer my-shared-secret"
+      ]
     }
   }
 }
@@ -82,9 +110,24 @@ export async function runCli() {
           type: 'string',
           short: 'k',
         },
+        transport: {
+          type: 'string',
+          short: 't',
+        },
+        port: {
+          type: 'string',
+          short: 'p',
+        },
+        host: {
+          type: 'string',
+        },
         help: {
           type: 'boolean',
           short: 'h',
+        },
+        version: {
+          type: 'boolean',
+          short: 'v',
         },
       },
       allowPositionals: true,
@@ -95,16 +138,33 @@ export async function runCli() {
       process.exit(0);
     }
 
-    // 設定を環境変数に設定（既存のサーバーコードが使用するため）
+    if (values.version) {
+      const __dirname = dirname(fileURLToPath(import.meta.url));
+      const pkg = JSON.parse(
+        readFileSync(join(__dirname, '..', 'package.json'), 'utf-8')
+      );
+      console.log(`microcms-mcp-server v${pkg.version}`);
+      process.exit(0);
+    }
+
+    // Set CLI args as env vars (for config.ts to consume)
     if (values['service-id']) {
       process.env.MICROCMS_SERVICE_ID = values['service-id'];
     }
     if (values['api-key']) {
       process.env.MICROCMS_API_KEY = values['api-key'];
     }
+    if (values.transport) {
+      process.env.MCP_TRANSPORT = values.transport;
+    }
+    if (values.port) {
+      process.env.MCP_HTTP_PORT = values.port;
+    }
+    if (values.host) {
+      process.env.MCP_HTTP_HOST = values.host;
+    }
 
-    // 設定の検証
-    // MICROCMS_SERVICES が設定されている場合はマルチサービスモード（単一サービス設定は不要）
+    // Validate service configuration
     const hasMultiServiceConfig = !!process.env.MICROCMS_SERVICES;
     const hasSingleServiceConfig = !!(
       process.env.MICROCMS_SERVICE_ID && process.env.MICROCMS_API_KEY
@@ -130,9 +190,8 @@ export async function runCli() {
       process.exit(1);
     }
 
-    // サーバーを起動
-    const { startServer } = await import('./server.js');
-    await startServer();
+    // Import index.ts which auto-runs main()
+    await import('./index.js');
   } catch (error) {
     if (error instanceof Error) {
       console.error('Error:', error.message);
@@ -143,7 +202,7 @@ export async function runCli() {
   }
 }
 
-// 直接実行された場合
+// Run if executed directly
 if (import.meta.url === `file://${process.argv[1]}`) {
   runCli();
 }

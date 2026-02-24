@@ -1,5 +1,4 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
-import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import {
   CallToolRequestSchema,
   ListResourcesRequestSchema,
@@ -8,9 +7,9 @@ import {
 } from '@modelcontextprotocol/sdk/types.js';
 
 import {
-  getApiList,
+  fetchApisForService,
   getAppConfig,
-  getServiceIds,
+  getServiceInfo,
   initializeClients,
 } from './client.js';
 // Import tool definitions and handlers
@@ -23,28 +22,28 @@ import {
   handleCreateContentPublished,
 } from './tools/create-content-published.js';
 import {
+  createContentsBulkDraftTool,
+  createContentsBulkPublishedTool,
+  handleCreateContentsBulkDraft,
+  handleCreateContentsBulkPublished,
+} from './tools/create-contents-bulk.js';
+import {
   deleteContentTool,
   handleDeleteContent,
 } from './tools/delete-content.js';
 import { deleteMediaTool, handleDeleteMedia } from './tools/delete-media.js';
 import { getApiInfoTool, handleGetApiInfo } from './tools/get-api-info.js';
 import { getApiListTool, handleGetApiList } from './tools/get-apis-list.js';
+import { getContentTool, handleGetContent } from './tools/get-content.js';
 import {
   getContentMetaTool,
   handleGetContentMeta,
 } from './tools/get-content-meta.js';
-import { getContentTool, handleGetContent } from './tools/get-content.js';
-import { getListMetaTool, handleGetListMeta } from './tools/get-list-meta.js';
 import { getListTool, handleGetList } from './tools/get-list.js';
+import { getListMetaTool, handleGetListMeta } from './tools/get-list-meta.js';
 import { getMediaTool, handleGetMedia } from './tools/get-media.js';
 import { getMemberTool, handleGetMember } from './tools/get-member.js';
 import { getServicesTool, handleGetServices } from './tools/get-services.js';
-import {
-  createContentsBulkPublishedTool,
-  createContentsBulkDraftTool,
-  handleCreateContentsBulkPublished,
-  handleCreateContentsBulkDraft,
-} from './tools/create-contents-bulk.js';
 import { handlePatchContent, patchContentTool } from './tools/patch-content.js';
 import {
   handlePatchContentCreatedBy,
@@ -63,7 +62,7 @@ import {
   updateContentPublishedTool,
 } from './tools/update-content-published.js';
 import { handleUploadMedia, uploadMediaTool } from './tools/upload-media.js';
-import type { ToolParameters, MediaToolParameters, BulkToolParameters } from './types.js';
+import type { BulkToolParameters, ToolParameters } from './types.js';
 
 // Fixed tool list (21 tools)
 const tools = [
@@ -107,10 +106,16 @@ const toolHandlers: Record<
   microcms_get_content_meta: handleGetContentMeta,
   microcms_create_content_published: handleCreateContentPublished,
   microcms_create_content_draft: handleCreateContentDraft,
-  microcms_create_contents_bulk_published: (params) =>
-    handleCreateContentsBulkPublished(params as unknown as BulkToolParameters),
-  microcms_create_contents_bulk_draft: (params) =>
-    handleCreateContentsBulkDraft(params as unknown as BulkToolParameters),
+  microcms_create_contents_bulk_published: (params, serviceId) =>
+    handleCreateContentsBulkPublished(
+      params as unknown as BulkToolParameters,
+      serviceId
+    ),
+  microcms_create_contents_bulk_draft: (params, serviceId) =>
+    handleCreateContentsBulkDraft(
+      params as unknown as BulkToolParameters,
+      serviceId
+    ),
   microcms_update_content_published: handleUpdateContentPublished,
   microcms_update_content_draft: handleUpdateContentDraft,
   microcms_patch_content: handlePatchContent,
@@ -125,191 +130,149 @@ const toolHandlers: Record<
   microcms_get_member: handleGetMember,
 };
 
-const server = new Server(
-  {
-    name: 'microcms-mcp-server',
-    version: '1.0.0',
-  },
-  {
-    capabilities: {
-      tools: {},
-      resources: {},
+/**
+ * Create a new MCP Server instance with all tools and resources registered.
+ * This factory function creates independent server instances for each connection.
+ */
+export function createMcpServer(): Server {
+  const server = new Server(
+    {
+      name: 'microcms-mcp-server',
+      version: '1.0.0',
     },
-  }
-);
-
-// List available tools
-server.setRequestHandler(ListToolsRequestSchema, async () => {
-  return { tools };
-});
-
-// List available resources
-server.setRequestHandler(ListResourcesRequestSchema, async () => {
-  return {
-    resources: [
-      {
-        uri: 'microcms://services',
-        name: 'Available microCMS Services',
-        description:
-          'List of configured microCMS services. In multi-service mode, use serviceId parameter in tools to specify which service to use.',
-        mimeType: 'application/json',
+    {
+      capabilities: {
+        tools: {},
+        resources: {},
       },
-    ],
-  };
-});
+    }
+  );
 
-// Read resource
-server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
-  const { uri } = request.params;
+  // List available tools
+  server.setRequestHandler(ListToolsRequestSchema, async () => {
+    return { tools };
+  });
 
-  if (uri === 'microcms://services') {
-    const config = getAppConfig();
-
-    // Helper function to fetch API list for a service
-    const fetchApisForService = async (
-      serviceId: string
-    ): Promise<{ name: string; endpoint: string; type: string }[]> => {
-      try {
-        const result = await getApiList(serviceId);
-        if (result && Array.isArray(result.apis)) {
-          return result.apis.map(
-            (api: {
-              apiName?: string;
-              name?: string;
-              apiEndpoint?: string;
-              endpoint?: string;
-              apiType?: string[];
-              type?: string;
-            }) => ({
-              name: api.apiName || api.name || '',
-              endpoint: api.apiEndpoint || api.endpoint || '',
-              type:
-                api.type === 'list' ||
-                (Array.isArray(api.apiType) && api.apiType.includes('LIST'))
-                  ? 'list'
-                  : 'object',
-            })
-          );
-        }
-        return [];
-      } catch {
-        return [];
-      }
+  // List available resources
+  server.setRequestHandler(ListResourcesRequestSchema, async () => {
+    return {
+      resources: [
+        {
+          uri: 'microcms://services',
+          name: 'Available microCMS Services',
+          description:
+            'List of configured microCMS services. In multi-service mode, use serviceId parameter in tools to specify which service to use.',
+          mimeType: 'application/json',
+        },
+      ],
     };
+  });
 
-    let content: object;
-    if (config.mode === 'single') {
-      const apis = await fetchApisForService(config.serviceDomain);
-      content = {
-        mode: 'single',
-        description: 'Single service mode - serviceId parameter is optional',
-        services: [
+  // Read resource
+  server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
+    const { uri } = request.params;
+
+    if (uri === 'microcms://services') {
+      const config = getAppConfig();
+
+      let content: object;
+      if (config.mode === 'single') {
+        const [apis, serviceInfo] = await Promise.all([
+          fetchApisForService(config.serviceDomain),
+          getServiceInfo(config.serviceDomain),
+        ]);
+        content = {
+          mode: 'single',
+          description: 'Single service mode - serviceId parameter is optional',
+          services: [
+            {
+              id: config.serviceDomain,
+              name: serviceInfo.name,
+              apis,
+            },
+          ],
+        };
+      } else {
+        // Fetch APIs and service info for all services in parallel
+        const servicesWithApis = await Promise.all(
+          config.services.map(async (s) => {
+            const [apis, serviceInfo] = await Promise.all([
+              fetchApisForService(s.id),
+              getServiceInfo(s.id),
+            ]);
+            return {
+              id: s.id,
+              name: serviceInfo.name,
+              apis,
+            };
+          })
+        );
+
+        content = {
+          mode: 'multi',
+          description:
+            'Multi service mode - serviceId parameter is required for all tools. Use the serviceId that contains the endpoint you need.',
+          services: servicesWithApis,
+        };
+      }
+
+      return {
+        contents: [
           {
-            id: config.serviceDomain,
-            apis,
+            uri,
+            mimeType: 'application/json',
+            text: JSON.stringify(content, null, 2),
           },
         ],
       };
-    } else {
-      // Fetch APIs for all services in parallel
-      const servicesWithApis = await Promise.all(
-        config.services.map(async (s) => {
-          const apis = await fetchApisForService(s.id);
-          return {
-            id: s.id,
-            apis,
-          };
-        })
-      );
+    }
 
-      content = {
-        mode: 'multi',
-        description:
-          'Multi service mode - serviceId parameter is required for all tools. Use the serviceId that contains the endpoint you need.',
-        services: servicesWithApis,
+    throw new Error(`Unknown resource: ${uri}`);
+  });
+
+  // Handle tool calls
+  server.setRequestHandler(CallToolRequestSchema, async (request) => {
+    const { name, arguments: args } = request.params;
+    const params = args as unknown as ToolParameters & {
+      serviceId?: string;
+    };
+
+    try {
+      const handler = toolHandlers[name];
+      if (!handler) {
+        throw new Error(`Unknown tool: ${name}`);
+      }
+
+      // Extract serviceId from params and pass to handler
+      const { serviceId, ...restParams } = params;
+      const result = await handler(restParams, serviceId);
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: JSON.stringify(result, null, 2),
+          },
+        ],
+      };
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `Error: ${errorMessage}`,
+          },
+        ],
+        isError: true,
       };
     }
+  });
 
-    return {
-      contents: [
-        {
-          uri,
-          mimeType: 'application/json',
-          text: JSON.stringify(content, null, 2),
-        },
-      ],
-    };
-  }
-
-  throw new Error(`Unknown resource: ${uri}`);
-});
-
-// Handle tool calls
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
-  const { name, arguments: args } = request.params;
-  const params = args as unknown as ToolParameters & { serviceId?: string };
-
-  try {
-    const handler = toolHandlers[name];
-    if (!handler) {
-      throw new Error(`Unknown tool: ${name}`);
-    }
-
-    // Extract serviceId from params and pass to handler
-    const { serviceId, ...restParams } = params;
-    const result = await handler(restParams, serviceId);
-
-    return {
-      content: [
-        {
-          type: 'text',
-          text: JSON.stringify(result, null, 2),
-        },
-      ],
-    };
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-
-    return {
-      content: [
-        {
-          type: 'text',
-          text: `Error: ${errorMessage}`,
-        },
-      ],
-      isError: true,
-    };
-  }
-});
-
-export async function startServer() {
-  try {
-    // Initialize clients and get configuration
-    const config = initializeClients();
-
-    // Log mode information
-    if (config.mode === 'single') {
-      console.error(
-        `microCMS MCP Server starting in single-service mode (service: ${config.serviceDomain})`
-      );
-    } else {
-      const serviceIds = getServiceIds().join(', ');
-      console.error(
-        `microCMS MCP Server starting in multi-service mode (services: ${serviceIds})`
-      );
-    }
-
-    const transport = new StdioServerTransport();
-    await server.connect(transport);
-  } catch (error) {
-    if (
-      error instanceof Error &&
-      (error.message.includes('microCMS credentials') ||
-        error.message.includes('MICROCMS_SERVICES'))
-    ) {
-      console.error('Configuration Error:', error.message);
-      process.exit(1);
-    }
-    throw error;
-  }
+  return server;
 }
+
+// Re-export for use by transport layer
+export { initializeClients };

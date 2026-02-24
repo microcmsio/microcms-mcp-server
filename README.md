@@ -148,6 +148,65 @@ blogの最新記事をshopの商品説明にコピーして
 }
 ```
 
+### 方法4: リモートMCPサーバー（HTTP）として使う
+
+HTTPトランスポートを使って、リモートMCPサーバーとして起動できます。チームメンバーや外部ツールから共有利用する場合に便利です。
+
+#### サーバー側の起動
+
+```bash
+# 単一サービス
+MICROCMS_SERVICE_ID=my-blog \
+MICROCMS_API_KEY=your-api-key \
+MCP_TRANSPORT=http \
+MCP_AUTH_TOKEN=my-shared-secret \
+npx microcms-mcp-server
+
+# 複数サービス
+MICROCMS_SERVICES='[{"id":"blog","apiKey":"key1"},{"id":"shop","apiKey":"key2"}]' \
+MCP_TRANSPORT=http \
+MCP_AUTH_TOKEN=my-shared-secret \
+npx microcms-mcp-server
+```
+
+#### クライアント側の設定（mcp-remote経由）
+
+```json
+{
+  "mcpServers": {
+    "microcms-remote": {
+      "command": "npx",
+      "args": [
+        "-y", "mcp-remote",
+        "http://your-server:3000/mcp",
+        "--header", "Authorization:Bearer my-shared-secret"
+      ]
+    }
+  }
+}
+```
+
+#### Dockerで起動
+
+```bash
+# ビルド
+docker build -t microcms-mcp .
+
+# 起動
+MCP_AUTH_TOKEN=my-secret \
+MICROCMS_SERVICES='[{"id":"blog","apiKey":"key1"}]' \
+docker compose up -d
+```
+
+#### CLIオプション
+
+| オプション | 環境変数 | デフォルト | 説明 |
+|-----------|---------|-----------|------|
+| `--transport` | `MCP_TRANSPORT` | `stdio` | トランスポートモード（`stdio` または `http`） |
+| `--port` | `MCP_HTTP_PORT` | `3000` | HTTPサーバーのポート番号 |
+| `--host` | `MCP_HTTP_HOST` | `0.0.0.0` | HTTPサーバーのホスト |
+| - | `MCP_AUTH_TOKEN` | - | Bearer認証トークン（設定時のみ認証が有効） |
+
 ### より詳しい使い方
 
 以下の記事でより詳しい使い方を紹介しています。

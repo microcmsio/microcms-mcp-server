@@ -1,7 +1,7 @@
-import { Tool } from '@modelcontextprotocol/sdk/types.js';
+import type { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { create } from '../client.js';
-import type { BulkToolParameters, BulkCreateResult } from '../types.js';
 import { FIELD_FORMATS_DESCRIPTION } from '../constants.js';
+import type { BulkCreateResult, BulkToolParameters } from '../types.js';
 
 const BULK_DESCRIPTION = `
   Create multiple contents in microCMS at once.
@@ -17,6 +17,11 @@ export const createContentsBulkPublishedTool: Tool = {
   inputSchema: {
     type: 'object',
     properties: {
+      serviceId: {
+        type: 'string',
+        description:
+          'Service ID (required in multi-service mode, optional in single-service mode)',
+      },
       endpoint: {
         type: 'string',
         description: 'Content type name (e.g., "blogs", "news")',
@@ -50,6 +55,11 @@ export const createContentsBulkDraftTool: Tool = {
   inputSchema: {
     type: 'object',
     properties: {
+      serviceId: {
+        type: 'string',
+        description:
+          'Service ID (required in multi-service mode, optional in single-service mode)',
+      },
       endpoint: {
         type: 'string',
         description: 'Content type name (e.g., "blogs", "news")',
@@ -79,7 +89,8 @@ export const createContentsBulkDraftTool: Tool = {
 
 async function handleBulkCreate(
   params: BulkToolParameters,
-  isDraft: boolean
+  isDraft: boolean,
+  serviceId?: string
 ): Promise<BulkCreateResult> {
   const { endpoint, contents } = params;
 
@@ -103,7 +114,12 @@ async function handleBulkCreate(
         createOptions.contentId = item.contentId;
       }
 
-      const result = await create(endpoint, item.content, createOptions);
+      const result = await create(
+        endpoint,
+        item.content,
+        createOptions,
+        serviceId
+      );
 
       results.push({
         index: i,
@@ -112,7 +128,8 @@ async function handleBulkCreate(
       });
       successCount++;
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
       results.push({
         index: i,
         success: false,
@@ -131,14 +148,15 @@ async function handleBulkCreate(
 }
 
 export async function handleCreateContentsBulkPublished(
-  params: BulkToolParameters
+  params: BulkToolParameters,
+  serviceId?: string
 ): Promise<BulkCreateResult> {
-  return handleBulkCreate(params, false);
+  return handleBulkCreate(params, false, serviceId);
 }
 
 export async function handleCreateContentsBulkDraft(
-  params: BulkToolParameters
+  params: BulkToolParameters,
+  serviceId?: string
 ): Promise<BulkCreateResult> {
-  return handleBulkCreate(params, true);
+  return handleBulkCreate(params, true, serviceId);
 }
-

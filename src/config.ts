@@ -1,15 +1,22 @@
 import type {
   AppConfig,
+  AuthConfig,
+  FullAppConfig,
   MultiServiceConfig,
   ServiceConfig,
   SingleServiceConfig,
+  TransportConfig,
+  TransportMode,
 } from './types.js';
 
 export type {
   AppConfig,
+  AuthConfig,
+  FullAppConfig,
   ServiceConfig,
   SingleServiceConfig,
   MultiServiceConfig,
+  TransportConfig,
 };
 
 /**
@@ -136,6 +143,93 @@ function parseSingleServiceConfig(): SingleServiceConfig {
     mode: 'single',
     serviceDomain,
     apiKey,
+  };
+}
+
+/**
+ * Parse transport configuration from environment variables and CLI arguments.
+ */
+export function parseTransportConfig(): TransportConfig {
+  const args = process.argv.slice(2);
+
+  let mode: TransportMode = 'stdio';
+  let host = '0.0.0.0';
+  let port = 3000;
+
+  // CLI arguments take priority
+  const transportIndex = args.indexOf('--transport');
+  if (transportIndex !== -1 && transportIndex + 1 < args.length) {
+    const value = args[transportIndex + 1];
+    if (value === 'stdio' || value === 'http') {
+      mode = value;
+    } else {
+      console.error(
+        `Warning: Invalid transport mode "${value}". Expected "stdio" or "http". Falling back to "stdio".`
+      );
+    }
+  }
+
+  const portIndex = args.indexOf('--port');
+  if (portIndex !== -1 && portIndex + 1 < args.length) {
+    const parsed = parseInt(args[portIndex + 1], 10);
+    if (!Number.isNaN(parsed)) {
+      port = parsed;
+    }
+  }
+
+  const hostIndex = args.indexOf('--host');
+  if (hostIndex !== -1 && hostIndex + 1 < args.length) {
+    host = args[hostIndex + 1];
+  }
+
+  // Environment variables as fallback
+  const envTransport = process.env.MCP_TRANSPORT;
+  if (!args.includes('--transport') && envTransport) {
+    if (envTransport === 'stdio' || envTransport === 'http') {
+      mode = envTransport;
+    } else {
+      console.error(
+        `Warning: Invalid MCP_TRANSPORT value "${envTransport}". Expected "stdio" or "http". Falling back to "stdio".`
+      );
+    }
+  }
+
+  const envPort = process.env.MCP_HTTP_PORT;
+  if (!args.includes('--port') && envPort) {
+    const parsed = parseInt(envPort, 10);
+    if (!Number.isNaN(parsed)) {
+      port = parsed;
+    }
+  }
+
+  const envHost = process.env.MCP_HTTP_HOST;
+  if (!args.includes('--host') && envHost) {
+    host = envHost;
+  }
+
+  return { mode, host, port };
+}
+
+/**
+ * Parse authentication configuration from environment variables.
+ */
+export function parseAuthConfig(): AuthConfig {
+  const bearerToken = process.env.MCP_AUTH_TOKEN;
+
+  return {
+    enabled: !!bearerToken,
+    bearerToken,
+  };
+}
+
+/**
+ * Parse the full application configuration including services, transport, and auth.
+ */
+export function parseFullConfig(): FullAppConfig {
+  return {
+    services: parseConfig(),
+    transport: parseTransportConfig(),
+    auth: parseAuthConfig(),
   };
 }
 

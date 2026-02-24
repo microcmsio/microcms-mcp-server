@@ -1,21 +1,22 @@
 import {
-    createClient,
-    createManagementClient,
-    type MicroCMSQueries,
+  createClient,
+  createManagementClient,
+  type MicroCMSQueries,
 } from 'microcms-js-sdk';
 import { parseConfig } from './config.js';
 import type {
-    ApiInfo,
-    ApiListResponse,
-    AppConfig,
-    ContentMeta,
-    ContentMetaListResponse,
-    MediaListResponse,
-    MediaUploadResponse,
-    MemberInfo,
-    MicroCMSContent,
-    MicroCMSListResponse,
-    ServiceConfig,
+  ApiInfo,
+  ApiListResponse,
+  AppConfig,
+  ContentMeta,
+  ContentMetaListResponse,
+  MediaListResponse,
+  MediaUploadResponse,
+  MemberInfo,
+  MicroCMSContent,
+  MicroCMSListResponse,
+  ServiceConfig,
+  ServiceInfo,
 } from './types.js';
 
 // Use ReturnType to get actual client types from factory functions
@@ -216,6 +217,65 @@ export const microCMSConfig = {
   },
 };
 
+/**
+ * Get service information (name, id) from the microCMS Management API.
+ * Requires the GET /api/v1/service endpoint (PR #21694).
+ * Falls back gracefully if the endpoint is not available.
+ */
+export async function getServiceInfo(serviceId?: string): Promise<ServiceInfo> {
+  const clients = serviceId
+    ? getClientsForService(serviceId)
+    : getDefaultClients();
+
+  try {
+    const url = `https://${clients.serviceDomain}.microcms-management.io/api/v1/service`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'X-MICROCMS-API-KEY': clients.apiKey,
+      },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return {
+        id: clients.serviceDomain,
+        name: data.name || clients.serviceDomain,
+      };
+    }
+
+    // 404 (endpoint not implemented) or 403 (no permission) - fall back
+    return { id: clients.serviceDomain, name: clients.serviceDomain };
+  } catch {
+    // Network error - fall back
+    return { id: clients.serviceDomain, name: clients.serviceDomain };
+  }
+}
+
+/**
+ * Attempt to fetch service info for all configured services.
+ * Failures do not block server startup.
+ */
+export async function fetchAllServiceInfo(): Promise<Map<string, ServiceInfo>> {
+  const serviceIds = getServiceIds();
+  const infoMap = new Map<string, ServiceInfo>();
+
+  const results = await Promise.allSettled(
+    serviceIds.map((id) => getServiceInfo(id))
+  );
+
+  for (let i = 0; i < serviceIds.length; i++) {
+    const result = results[i];
+    if (result.status === 'fulfilled') {
+      infoMap.set(serviceIds[i], result.value);
+    } else {
+      infoMap.set(serviceIds[i], { id: serviceIds[i], name: serviceIds[i] });
+    }
+  }
+
+  return infoMap;
+}
+
 // Service-specific API functions
 export async function getList<T = MicroCMSContent>(
   endpoint: string,
@@ -345,6 +405,41 @@ export async function getApiInfo(
   }
 
   return await response.json();
+}
+
+/**
+ * Fetch formatted API list for a service (name, endpoint, type).
+ * Returns empty array on failure.
+ */
+export async function fetchApisForService(
+  serviceId: string
+): Promise<{ name: string; endpoint: string; type: string }[]> {
+  try {
+    const result = await getApiList(serviceId);
+    if (result && Array.isArray(result.apis)) {
+      return result.apis.map(
+        (api: {
+          apiName?: string;
+          name?: string;
+          apiEndpoint?: string;
+          endpoint?: string;
+          apiType?: string[];
+          type?: string;
+        }) => ({
+          name: api.apiName || api.name || '',
+          endpoint: api.apiEndpoint || api.endpoint || '',
+          type:
+            api.type === 'list' ||
+            (Array.isArray(api.apiType) && api.apiType.includes('LIST'))
+              ? 'list'
+              : 'object',
+        })
+      );
+    }
+    return [];
+  } catch {
+    return [];
+  }
 }
 
 export async function getApiList(serviceId?: string): Promise<ApiListResponse> {

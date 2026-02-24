@@ -19,6 +19,34 @@ export interface MultiServiceConfig {
 
 export type AppConfig = SingleServiceConfig | MultiServiceConfig;
 
+// Transport configuration
+export type TransportMode = 'stdio' | 'http';
+
+export interface TransportConfig {
+  mode: TransportMode;
+  host: string;
+  port: number;
+}
+
+// Authentication configuration
+export interface AuthConfig {
+  enabled: boolean;
+  bearerToken?: string;
+}
+
+// Service information (from GET /api/v1/service)
+export interface ServiceInfo {
+  id: string;
+  name: string;
+}
+
+// Full application configuration
+export interface FullAppConfig {
+  services: AppConfig;
+  transport: TransportConfig;
+  auth: AuthConfig;
+}
+
 // microCMS API types
 export interface MicroCMSListOptions {
   draftKey?: string;
@@ -119,6 +147,7 @@ export interface MediaToolParameters {
 
 // Bulk create types
 export interface BulkCreateItem {
+  // biome-ignore lint/suspicious/noExplicitAny: Content structure is dynamic
   content: Record<string, any>;
   contentId?: string;
 }
