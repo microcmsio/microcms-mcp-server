@@ -223,9 +223,7 @@ export const microCMSConfig = {
  * Falls back gracefully if the endpoint is not available.
  */
 export async function getServiceInfo(serviceId?: string): Promise<ServiceInfo> {
-  const clients = serviceId
-    ? getClientsForService(serviceId)
-    : getDefaultClients();
+  const clients = getClientsForService(serviceId);
 
   try {
     const url = `https://${clients.serviceDomain}.microcms-management.io/api/v1/service`;
@@ -282,9 +280,7 @@ export async function getList<T = MicroCMSContent>(
   queries?: MicroCMSQueries,
   serviceId?: string
 ): Promise<MicroCMSListResponse<T>> {
-  const clients = serviceId
-    ? getClientsForService(serviceId)
-    : getDefaultClients();
+  const clients = getClientsForService(serviceId);
   return await clients.client.getList<T>({
     endpoint,
     queries,
@@ -297,9 +293,7 @@ export async function getListDetail<T = MicroCMSContent>(
   queries?: MicroCMSQueries,
   serviceId?: string
 ): Promise<T> {
-  const clients = serviceId
-    ? getClientsForService(serviceId)
-    : getDefaultClients();
+  const clients = getClientsForService(serviceId);
   return await clients.client.getListDetail<T>({
     endpoint,
     contentId,
@@ -316,9 +310,7 @@ export async function create<T = MicroCMSContent>(
   options?: { isDraft?: boolean; contentId?: string },
   serviceId?: string
 ): Promise<{ id: string }> {
-  const clients = serviceId
-    ? getClientsForService(serviceId)
-    : getDefaultClients();
+  const clients = getClientsForService(serviceId);
   return await clients.client.create({
     endpoint,
     content,
@@ -336,9 +328,7 @@ export async function update<T = MicroCMSContent>(
   options?: { isDraft?: boolean },
   serviceId?: string
 ): Promise<{ id: string }> {
-  const clients = serviceId
-    ? getClientsForService(serviceId)
-    : getDefaultClients();
+  const clients = getClientsForService(serviceId);
   return await clients.client.update({
     endpoint,
     contentId,
@@ -356,9 +346,7 @@ export async function patch<T = MicroCMSContent>(
   options?: { isDraft?: boolean },
   serviceId?: string
 ): Promise<{ id: string }> {
-  const clients = serviceId
-    ? getClientsForService(serviceId)
-    : getDefaultClients();
+  const clients = getClientsForService(serviceId);
   return await clients.client.update({
     endpoint,
     contentId,
@@ -372,9 +360,7 @@ export async function deleteContent(
   contentId: string,
   serviceId?: string
 ): Promise<void> {
-  const clients = serviceId
-    ? getClientsForService(serviceId)
-    : getDefaultClients();
+  const clients = getClientsForService(serviceId);
   return await clients.client.delete({
     endpoint,
     contentId,
@@ -385,9 +371,7 @@ export async function getApiInfo(
   endpoint: string,
   serviceId?: string
 ): Promise<ApiInfo> {
-  const clients = serviceId
-    ? getClientsForService(serviceId)
-    : getDefaultClients();
+  const clients = getClientsForService(serviceId);
   const url = `https://${clients.serviceDomain}.microcms-management.io/api/v1/apis/${endpoint}`;
 
   const response = await fetch(url, {
@@ -443,9 +427,7 @@ export async function fetchApisForService(
 }
 
 export async function getApiList(serviceId?: string): Promise<ApiListResponse> {
-  const clients = serviceId
-    ? getClientsForService(serviceId)
-    : getDefaultClients();
+  const clients = getClientsForService(serviceId);
   const url = `https://${clients.serviceDomain}.microcms-management.io/api/v1/apis`;
 
   const response = await fetch(url, {
@@ -469,9 +451,7 @@ export async function getMember(
   memberId: string,
   serviceId?: string
 ): Promise<MemberInfo> {
-  const clients = serviceId
-    ? getClientsForService(serviceId)
-    : getDefaultClients();
+  const clients = getClientsForService(serviceId);
   const url = `https://${clients.serviceDomain}.microcms-management.io/api/v1/members/${memberId}`;
 
   const response = await fetch(url, {
@@ -495,9 +475,7 @@ export async function deleteMedia(
   mediaUrl: string,
   serviceId?: string
 ): Promise<{ id: string }> {
-  const clients = serviceId
-    ? getClientsForService(serviceId)
-    : getDefaultClients();
+  const clients = getClientsForService(serviceId);
   const url = `https://${clients.serviceDomain}.microcms-management.io/api/v2/media?url=${encodeURIComponent(mediaUrl)}`;
 
   const response = await fetch(url, {
@@ -523,9 +501,7 @@ export async function patchContentStatus(
   status: 'PUBLISH' | 'DRAFT',
   serviceId?: string
 ): Promise<void> {
-  const clients = serviceId
-    ? getClientsForService(serviceId)
-    : getDefaultClients();
+  const clients = getClientsForService(serviceId);
   const url = `https://${clients.serviceDomain}.microcms-management.io/api/v1/contents/${endpoint}/${contentId}/status`;
 
   const response = await fetch(url, {
@@ -551,9 +527,7 @@ export async function patchContentCreatedBy(
   memberId: string,
   serviceId?: string
 ): Promise<{ id: string }> {
-  const clients = serviceId
-    ? getClientsForService(serviceId)
-    : getDefaultClients();
+  const clients = getClientsForService(serviceId);
   const url = `https://${clients.serviceDomain}.microcms-management.io/api/v1/contents/${endpoint}/${contentId}/createdBy`;
 
   const response = await fetch(url, {
@@ -580,9 +554,7 @@ export async function getListMeta(
   options?: { limit?: number; offset?: number },
   serviceId?: string
 ): Promise<ContentMetaListResponse> {
-  const clients = serviceId
-    ? getClientsForService(serviceId)
-    : getDefaultClients();
+  const clients = getClientsForService(serviceId);
   const queryParams = new URLSearchParams();
   if (options?.limit) queryParams.append('limit', options.limit.toString());
   if (options?.offset) queryParams.append('offset', options.offset.toString());
@@ -611,9 +583,7 @@ export async function getContentManagement(
   contentId: string,
   serviceId?: string
 ): Promise<ContentMeta> {
-  const clients = serviceId
-    ? getClientsForService(serviceId)
-    : getDefaultClients();
+  const clients = getClientsForService(serviceId);
   const url = `https://${clients.serviceDomain}.microcms-management.io/api/v1/contents/${endpoint}/${contentId}`;
 
   const response = await fetch(url, {
@@ -643,9 +613,7 @@ export async function getMedia(
   },
   serviceId?: string
 ): Promise<MediaListResponse> {
-  const clients = serviceId
-    ? getClientsForService(serviceId)
-    : getDefaultClients();
+  const clients = getClientsForService(serviceId);
   const queryParams = new URLSearchParams();
   if (params?.limit) queryParams.append('limit', params.limit.toString());
   if (params?.imageOnly) queryParams.append('imageOnly', 'true');
@@ -681,9 +649,7 @@ export async function uploadMedia(
       },
   serviceId?: string
 ): Promise<MediaUploadResponse> {
-  const clients = serviceId
-    ? getClientsForService(serviceId)
-    : getDefaultClients();
+  const clients = getClientsForService(serviceId);
   // SDK types don't fully match API capabilities, type assertion required
   // biome-ignore lint/suspicious/noExplicitAny: SDK type limitation
   return await clients.managementClient.uploadMedia(params as any);
