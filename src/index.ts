@@ -14,11 +14,13 @@ async function main() {
 
     // Log mode information
     if (serviceConfig.mode === 'single') {
+      // biome-ignore lint/suspicious/noConsole: intentional startup log to stderr
       console.error(
         `microCMS MCP Server starting in single-service mode (service: ${serviceConfig.serviceDomain})`
       );
     } else {
       const serviceIds = serviceConfig.services.map((s) => s.id).join(', ');
+      // biome-ignore lint/suspicious/noConsole: intentional startup log to stderr
       console.error(
         `microCMS MCP Server starting in multi-service mode (services: ${serviceIds})`
       );
@@ -32,6 +34,7 @@ async function main() {
       (error.message.includes('microCMS credentials') ||
         error.message.includes('MICROCMS_SERVICES'))
     ) {
+      // biome-ignore lint/suspicious/noConsole: intentional error output to stderr
       console.error('Configuration Error:', error.message);
       process.exit(1);
     }

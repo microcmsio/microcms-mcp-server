@@ -72,6 +72,7 @@ export async function startHttpTransport(
 
   const { host, port } = config.transport;
   serve({ fetch: app.fetch, hostname: host, port }, (info) => {
+    // biome-ignore lint/suspicious/noConsole: intentional server startup log to stderr
     console.error(
       `microCMS MCP Server (HTTP) listening on http://${info.address}:${info.port}/mcp`
     );

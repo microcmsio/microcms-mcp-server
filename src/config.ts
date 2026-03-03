@@ -163,6 +163,7 @@ export function parseTransportConfig(): TransportConfig {
     if (value === 'stdio' || value === 'http') {
       mode = value;
     } else {
+      // biome-ignore lint/suspicious/noConsole: intentional warning to stderr
       console.error(
         `Warning: Invalid transport mode "${value}". Expected "stdio" or "http". Falling back to "stdio".`
       );
@@ -188,6 +189,7 @@ export function parseTransportConfig(): TransportConfig {
     if (envTransport === 'stdio' || envTransport === 'http') {
       mode = envTransport;
     } else {
+      // biome-ignore lint/suspicious/noConsole: intentional warning to stderr
       console.error(
         `Warning: Invalid MCP_TRANSPORT value "${envTransport}". Expected "stdio" or "http". Falling back to "stdio".`
       );
@@ -230,38 +232,5 @@ export function parseFullConfig(): FullAppConfig {
     services: parseConfig(),
     transport: parseTransportConfig(),
     auth: parseAuthConfig(),
-  };
-}
-
-// Legacy exports for backward compatibility
-export interface Config {
-  serviceDomain: string;
-  apiKey: string;
-}
-
-/**
- * @deprecated Use parseConfig() instead. This function is kept for backward compatibility.
- */
-export function parseLegacyConfig(): Config {
-  const config = parseConfig();
-
-  if (config.mode === 'single') {
-    return {
-      serviceDomain: config.serviceDomain,
-      apiKey: config.apiKey,
-    };
-  }
-
-  // For multi-service mode, return the first service as default
-  // This maintains backward compatibility but logs a warning
-  const firstService = config.services[0];
-  console.error(
-    'Warning: parseLegacyConfig() called in multi-service mode. ' +
-      `Using first service "${firstService.id}" as default.`
-  );
-
-  return {
-    serviceDomain: firstService.id,
-    apiKey: firstService.apiKey,
   };
 }
