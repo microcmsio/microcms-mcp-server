@@ -198,6 +198,8 @@ MICROCMS_SERVICES='[{"id":"blog","apiKey":"key1"}]' \
 docker compose up -d
 ```
 
+> 📖 Docker を使ったセットアップ、クライアント別の接続設定、トラブルシューティングの詳細は [DOCKER.md](./DOCKER.md) を参照してください。
+
 #### CLIオプション
 
 | オプション | 環境変数 | デフォルト | 説明 |
