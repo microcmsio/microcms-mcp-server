@@ -83,10 +83,21 @@ jobs:
       run: ls -la
 
     - name: Create Release
-      uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2.6.2
-      with:
-        files: |
-          microcms-mcp-server.mcpb
-          microcms-mcp-server-v*.mcpb
-        generate_release_notes: true
-        fail_on_unmatched_files: true
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        set -euo pipefail
+        if [ ! -f microcms-mcp-server.mcpb ]; then
+          echo "Error: microcms-mcp-server.mcpb not found"
+          exit 1
+        fi
+        shopt -s nullglob
+        versioned=(microcms-mcp-server-v*.mcpb)
+        if [ "${#versioned[@]}" -eq 0 ]; then
+          echo "Error: no microcms-mcp-server-v*.mcpb file found"
+          exit 1
+        fi
+        gh release create "${{ github.ref_name }}" \
+          microcms-mcp-server.mcpb "${versioned[@]}" \
+          --generate-notes \
+          --repo "${{ github.repository }}"
