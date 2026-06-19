@@ -132,6 +132,9 @@ export interface ToolParameters {
   status?: 'PUBLISH' | 'DRAFT';
   // CreatedBy parameters
   createdBy?: string;
+  // Reservation parameters
+  publishTime?: string;
+  stopTime?: string;
 }
 
 export interface MediaToolParameters {

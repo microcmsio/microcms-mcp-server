@@ -77,6 +77,10 @@
       "description": "Change content creator in microCMS (Management API). Updates the createdBy field of a content item to a specified member ID"
     },
     {
+      "name": "microcms_update_content_reservation",
+      "description": "Set or clear content publish and stop reservation schedules in microCMS (Management API)"
+    },
+    {
       "name": "microcms_delete_content",
       "description": "Delete content from microCMS"
     },

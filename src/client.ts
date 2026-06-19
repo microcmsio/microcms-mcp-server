@@ -549,6 +549,34 @@ export async function patchContentCreatedBy(
   return await response.json();
 }
 
+export async function updateContentReservation(
+  endpoint: string,
+  contentId: string,
+  reservation: { publishTime?: string; stopTime?: string },
+  serviceId?: string
+): Promise<{ id: string }> {
+  const clients = getClientsForService(serviceId);
+  const url = `https://${clients.serviceDomain}.microcms-management.io/api/v1/contents/${endpoint}/${contentId}/reservation`;
+
+  const response = await fetch(url, {
+    method: 'PUT',
+    headers: {
+      'X-MICROCMS-API-KEY': clients.apiKey,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(reservation),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(
+      `Failed to update content reservation: ${response.status} ${response.statusText} - ${errorText}`
+    );
+  }
+
+  return await response.json();
+}
+
 export async function getListMeta(
   endpoint: string,
   options?: { limit?: number; offset?: number },
