@@ -25,6 +25,10 @@
   },
   "tools": [
     {
+      "name": "microcms_get_services",
+      "description": "Get list of configured microCMS services and their available APIs (endpoints). Use this tool first to discover which services are available and find the correct serviceId for other tools."
+    },
+    {
       "name": "microcms_get_list",
       "description": "Get a list of content from microCMS with filtering and search capabilities"
     },
