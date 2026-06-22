@@ -1,6 +1,6 @@
 {
   "name": "microcms-mcp-server",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "microCMS MCP Bundle - microCMSのコンテンツAPIやマネジメントAPIを利用し、LLMからコンテンツ管理ができるMCP Bundle",
   "main": "dist/index.js",
   "type": "module",
@@ -62,6 +62,7 @@
     "@types/node": "^20.0.0",
     "typescript": "^5.0.0"
   },
+  "packageManager": "pnpm@9.15.9",
   "engines": {
     "node": ">=18.0.0"
   },
