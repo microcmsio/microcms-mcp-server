@@ -61,10 +61,14 @@ import {
   handleUpdateContentPublished,
   updateContentPublishedTool,
 } from './tools/update-content-published.js';
+import {
+  handleUpdateContentReservation,
+  updateContentReservationTool,
+} from './tools/update-content-reservation.js';
 import { handleUploadMedia, uploadMediaTool } from './tools/upload-media.js';
 import type { BulkToolParameters, ToolParameters } from './types.js';
 
-// Fixed tool list (21 tools)
+// Fixed tool list (22 tools)
 const tools = [
   getServicesTool,
   getListTool,
@@ -80,6 +84,7 @@ const tools = [
   patchContentTool,
   patchContentStatusTool,
   patchContentCreatedByTool,
+  updateContentReservationTool,
   deleteContentTool,
   getMediaTool,
   uploadMediaTool,
@@ -121,6 +126,7 @@ const toolHandlers: Record<
   microcms_patch_content: handlePatchContent,
   microcms_patch_content_status: handlePatchContentStatus,
   microcms_patch_content_created_by: handlePatchContentCreatedBy,
+  microcms_update_content_reservation: handleUpdateContentReservation,
   microcms_delete_content: handleDeleteContent,
   microcms_get_media: handleGetMedia,
   microcms_upload_media: handleUploadMedia,
