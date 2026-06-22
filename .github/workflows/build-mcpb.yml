@@ -34,8 +34,10 @@ jobs:
     - name: Build project
       run: pnpm run build
 
-    - name: Install MCPB CLI globally
-      run: npm install -g @anthropic-ai/mcpb@1.1.1
+    - name: Prepare production dependencies for MCPB
+      run: |
+        rm -rf node_modules
+        pnpm install --prod --frozen-lockfile --config.node-linker=hoisted
 
     - name: Create MCPB package
       run: |
@@ -44,7 +46,7 @@ jobs:
         echo "Building MCPB for version: $VERSION"
 
         # Create MCPB directly in project root (mcpb pack includes dependencies)
-        npx @anthropic-ai/mcpb@1.1.1 pack
+        npx @anthropic-ai/mcpb@2.1.2 pack
 
         # Rename to include version
         mv microcms-mcp-server.mcpb microcms-mcp-server-v${VERSION}.mcpb
