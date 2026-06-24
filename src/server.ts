@@ -144,7 +144,7 @@ export function createMcpServer(): Server {
   const server = new Server(
     {
       name: 'microcms-mcp-server',
-      version: '0.8.0',
+      version: '0.10.0',
     },
     {
       capabilities: {
