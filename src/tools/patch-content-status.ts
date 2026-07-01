@@ -51,6 +51,15 @@ export async function handlePatchContentStatus(
     throw new Error('status must be either "PUBLISH" or "DRAFT"');
   }
 
-  await patchContentStatus(endpoint, contentId, status, serviceId);
-  return { message: `Content ${contentId} status changed to ${status}` };
+  const result = await patchContentStatus(
+    endpoint,
+    contentId,
+    status,
+    serviceId
+  );
+  return {
+    message: `Content ${contentId} status changed to ${status}`,
+    id: result.id,
+    adminUrl: result.adminUrl,
+  };
 }

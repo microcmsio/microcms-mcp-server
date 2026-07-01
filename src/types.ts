@@ -84,6 +84,11 @@ export interface MicroCMSContent {
   [key: string]: unknown;
 }
 
+export interface ContentWriteResponse {
+  id: string;
+  adminUrl: string;
+}
+
 export interface MicroCMSListResponse<T = MicroCMSContent> {
   contents: T[];
   totalCount: number;
