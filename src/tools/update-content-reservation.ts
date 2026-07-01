@@ -74,11 +74,13 @@ export async function handleUpdateContentReservation(
     return {
       message: `Content ${contentId} reservation schedules cleared`,
       id: result.id,
+      adminUrl: result.adminUrl,
     };
   }
 
   return {
     message: `Content ${contentId} reservation schedules updated`,
     id: result.id,
+    adminUrl: result.adminUrl,
   };
 }

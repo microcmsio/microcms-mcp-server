@@ -10,6 +10,7 @@ import type {
   AppConfig,
   ContentMeta,
   ContentMetaListResponse,
+  ContentWriteResponse,
   MediaListResponse,
   MediaUploadResponse,
   MemberInfo,
@@ -34,6 +35,14 @@ interface ServiceClients {
 const clientMap = new Map<string, ServiceClients>();
 let appConfig: AppConfig | null = null;
 let defaultServiceId: string | null = null;
+
+function buildContentAdminUrl(
+  serviceDomain: string,
+  endpoint: string,
+  contentId: string
+): string {
+  return `https://${serviceDomain}.microcms.io/apis/${endpoint}/${contentId}`;
+}
 
 /**
  * Initialize clients based on configuration.
@@ -309,13 +318,17 @@ export async function create<T = MicroCMSContent>(
   >,
   options?: { isDraft?: boolean; contentId?: string },
   serviceId?: string
-): Promise<{ id: string }> {
+): Promise<ContentWriteResponse> {
   const clients = getClientsForService(serviceId);
-  return await clients.client.create({
+  const result = await clients.client.create({
     endpoint,
     content,
     ...options,
   });
+  return {
+    ...result,
+    adminUrl: buildContentAdminUrl(clients.serviceDomain, endpoint, result.id),
+  };
 }
 
 export async function update<T = MicroCMSContent>(
@@ -327,14 +340,18 @@ export async function update<T = MicroCMSContent>(
   >,
   options?: { isDraft?: boolean },
   serviceId?: string
-): Promise<{ id: string }> {
+): Promise<ContentWriteResponse> {
   const clients = getClientsForService(serviceId);
-  return await clients.client.update({
+  const result = await clients.client.update({
     endpoint,
     contentId,
     content,
     ...options,
   });
+  return {
+    ...result,
+    adminUrl: buildContentAdminUrl(clients.serviceDomain, endpoint, result.id),
+  };
 }
 
 export async function patch<T = MicroCMSContent>(
@@ -345,14 +362,18 @@ export async function patch<T = MicroCMSContent>(
   >,
   options?: { isDraft?: boolean },
   serviceId?: string
-): Promise<{ id: string }> {
+): Promise<ContentWriteResponse> {
   const clients = getClientsForService(serviceId);
-  return await clients.client.update({
+  const result = await clients.client.update({
     endpoint,
     contentId,
     content,
     ...options,
   });
+  return {
+    ...result,
+    adminUrl: buildContentAdminUrl(clients.serviceDomain, endpoint, result.id),
+  };
 }
 
 export async function deleteContent(
@@ -500,7 +521,7 @@ export async function patchContentStatus(
   contentId: string,
   status: 'PUBLISH' | 'DRAFT',
   serviceId?: string
-): Promise<void> {
+): Promise<ContentWriteResponse> {
   const clients = getClientsForService(serviceId);
   const url = `https://${clients.serviceDomain}.microcms-management.io/api/v1/contents/${endpoint}/${contentId}/status`;
 
@@ -519,6 +540,11 @@ export async function patchContentStatus(
       `Failed to patch content status: ${response.status} ${response.statusText} - ${errorText}`
     );
   }
+
+  return {
+    id: contentId,
+    adminUrl: buildContentAdminUrl(clients.serviceDomain, endpoint, contentId),
+  };
 }
 
 export async function patchContentCreatedBy(
@@ -526,7 +552,7 @@ export async function patchContentCreatedBy(
   contentId: string,
   memberId: string,
   serviceId?: string
-): Promise<{ id: string }> {
+): Promise<ContentWriteResponse> {
   const clients = getClientsForService(serviceId);
   const url = `https://${clients.serviceDomain}.microcms-management.io/api/v1/contents/${endpoint}/${contentId}/createdBy`;
 
@@ -546,7 +572,11 @@ export async function patchContentCreatedBy(
     );
   }
 
-  return await response.json();
+  const result = await response.json();
+  return {
+    ...result,
+    adminUrl: buildContentAdminUrl(clients.serviceDomain, endpoint, result.id),
+  };
 }
 
 export async function updateContentReservation(
@@ -554,7 +584,7 @@ export async function updateContentReservation(
   contentId: string,
   reservation: { publishTime?: string; stopTime?: string },
   serviceId?: string
-): Promise<{ id: string }> {
+): Promise<ContentWriteResponse> {
   const clients = getClientsForService(serviceId);
   const url = `https://${clients.serviceDomain}.microcms-management.io/api/v1/contents/${endpoint}/${contentId}/reservation`;
 
@@ -574,7 +604,11 @@ export async function updateContentReservation(
     );
   }
 
-  return await response.json();
+  const result = await response.json();
+  return {
+    ...result,
+    adminUrl: buildContentAdminUrl(clients.serviceDomain, endpoint, result.id),
+  };
 }
 
 export async function getListMeta(
