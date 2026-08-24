@@ -1,6 +1,11 @@
-# microCMS MCP Server
+# microCMS MCP Server (Local)
 
-[microCMS](https://microcms.io/) のMCP（Model Context Protocol）サーバーです。  
+> [!WARNING]
+> このローカルMCPサーバーは、原則として今後更新されません。
+>
+> 新規利用には、microCMSがホストする[リモートMCPサーバー](https://document.microcms.io/mcp-server/microcms-mcp)の利用を推奨します。
+
+[microCMS](https://microcms.io/) のローカル環境で動作するMCP（Model Context Protocol）サーバーです。
 ClaudeなどのAIアシスタントがmicroCMSのコンテンツ管理システムとやり取りできるようにします。
 
 ## 必要なもの
