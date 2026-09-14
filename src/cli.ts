@@ -38,7 +38,7 @@ Environment Variables:
     MCP_HTTP_HOST            HTTP server host
 
   Authentication (HTTP mode):
-    MCP_AUTH_TOKEN            Bearer token for HTTP authentication
+    MCP_AUTH_TOKEN            Bearer token (required for HTTP; not needed for stdio)
 
 Examples:
   # Local single service (stdio, default)
@@ -49,9 +49,9 @@ Examples:
   npx microcms-mcp-server
 
   # Remote single service (HTTP)
-  npx microcms-mcp-server --service-id my-blog --api-key xxx --transport http --port 3000
+  MCP_AUTH_TOKEN=my-secret npx microcms-mcp-server --service-id my-blog --api-key xxx --transport http --port 3000
 
-  # Remote multi service (HTTP with auth)
+  # Remote multi service (HTTP)
   MCP_AUTH_TOKEN=my-secret npx microcms-mcp-server --transport http
 
 Claude Desktop Configuration (Single Service, stdio):

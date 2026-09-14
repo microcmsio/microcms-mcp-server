@@ -24,7 +24,7 @@
     "check": "biome check src/",
     "check:fix": "biome check --write src/",
     "prepublishOnly": "npm run build",
-    "test": "echo \"No tests specified\" && exit 0"
+    "test": "npm run build && node --test tests/*.test.mjs"
   },
   "keywords": [
     "mcp",

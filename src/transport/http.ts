@@ -9,15 +9,18 @@ export async function startHttpTransport(
   serverFactory: () => Server,
   config: FullAppConfig
 ): Promise<void> {
+  const token = config.auth.bearerToken;
+  if (!token?.trim()) {
+    throw new Error('MCP_AUTH_TOKEN is required for HTTP transport.');
+  }
+
   const app = new Hono();
 
   // CORS
   app.use('/mcp', cors());
 
-  // Bearer token auth (only if configured)
-  if (config.auth.enabled && config.auth.bearerToken) {
-    app.use('/mcp', bearerAuth({ token: config.auth.bearerToken }));
-  }
+  // Bearer token authentication is required for all MCP requests.
+  app.use('/mcp', bearerAuth({ token }));
 
   // Health check
   app.get('/health', (c) => c.json({ status: 'ok' }));

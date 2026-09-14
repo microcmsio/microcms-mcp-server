@@ -32,7 +32,8 @@ async function main() {
     if (
       error instanceof Error &&
       (error.message.includes('microCMS credentials') ||
-        error.message.includes('MICROCMS_SERVICES'))
+        error.message.includes('MICROCMS_SERVICES') ||
+        error.message.includes('MCP_AUTH_TOKEN'))
     ) {
       // biome-ignore lint/suspicious/noConsole: intentional error output to stderr
       console.error('Configuration Error:', error.message);
