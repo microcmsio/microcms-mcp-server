@@ -219,7 +219,6 @@ export function parseAuthConfig(): AuthConfig {
   const bearerToken = process.env.MCP_AUTH_TOKEN;
 
   return {
-    enabled: !!bearerToken,
     bearerToken,
   };
 }

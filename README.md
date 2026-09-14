@@ -157,6 +157,9 @@ blogの最新記事をshopの商品説明にコピーして
 
 HTTPトランスポートを使って、リモートMCPサーバーとして起動できます。チームメンバーや外部ツールから共有利用する場合に便利です。
 
+HTTPモードでは `MCP_AUTH_TOKEN` が必須です。未設定・空文字・空白のみの場合は起動に失敗します。stdioモードでは不要です。
+以前のバージョンで認証なしのHTTP接続を利用していた場合は、更新前にサーバーのトークンとクライアントの `Authorization: Bearer <token>` ヘッダーを設定してください。
+
 #### サーバー側の起動
 
 ```bash
@@ -195,6 +198,7 @@ npx microcms-mcp-server
 
 ```bash
 # ビルド
+npm run build
 docker build -t microcms-mcp .
 
 # 起動
@@ -212,7 +216,7 @@ docker compose up -d
 | `--transport` | `MCP_TRANSPORT` | `stdio` | トランスポートモード（`stdio` または `http`） |
 | `--port` | `MCP_HTTP_PORT` | `3000` | HTTPサーバーのポート番号 |
 | `--host` | `MCP_HTTP_HOST` | `0.0.0.0` | HTTPサーバーのホスト |
-| - | `MCP_AUTH_TOKEN` | - | Bearer認証トークン（設定時のみ認証が有効） |
+| - | `MCP_AUTH_TOKEN` | - | Bearer認証トークン（HTTPでは必須、stdioでは不要） |
 
 ### より詳しい使い方
 

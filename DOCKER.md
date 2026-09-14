@@ -42,11 +42,14 @@ MICROCMS_API_KEY=your-api-key
 MICROCMS_SERVICES=[{"id":"blog","apiKey":"your-blog-api-key"},{"id":"shop","apiKey":"your-shop-api-key"}]
 ```
 
-**認証トークン（推奨）:**
+**認証トークン（HTTPでは必須、stdioでは不要）:**
 
 ```bash
 MCP_AUTH_TOKEN=your-secret-token
 ```
+
+未設定・空文字の場合はDocker Composeがコンテナ起動前にエラーになります。空白のみの場合はアプリがHTTP待受を開始する前に終了します。
+以前のバージョンで認証なしのHTTP接続を利用していた場合は、更新前にトークンとクライアントのAuthorizationヘッダーを設定してください。
 
 ### 3. 起動
 
@@ -59,6 +62,8 @@ docker compose logs -f
 ```
 
 ### 4. ヘルスチェック
+
+`/health` は認証不要です。MCPを利用する `/mcp` へのリクエストにはBearer認証が必須です。
 
 ```bash
 # ヘルスチェックエンドポイント
@@ -171,13 +176,7 @@ Claude Code の設定ファイル（`.mcp.json` または `settings.json`）に�
 }
 ```
 
-認証なしで起動する場合は、`MCP_AUTH_TOKEN` を設定せず、`--header` 引数も省略してください。
-
-```json
-{
-  "args": ["-y", "mcp-remote", "http://localhost:3000/mcp"]
-}
-```
+サーバーの `MCP_AUTH_TOKEN` にはトークン本体だけを設定します。上記のクライアント設定では、Authorizationヘッダーの値として `Bearer ` を付けて渡しています。
 
 ## 環境変数リファレンス
 
@@ -189,7 +188,7 @@ Claude Code の設定ファイル（`.mcp.json` または `settings.json`）に�
 | `MCP_TRANSPORT` | `stdio` | トランスポートモード（Docker では `http` 固定） |
 | `MCP_HTTP_PORT` | `3000` | HTTP サーバーのポート番号 |
 | `MCP_HTTP_HOST` | `0.0.0.0` | HTTP サーバーのバインドアドレス |
-| `MCP_AUTH_TOKEN` | - | Bearer 認証トークン（未設定の場合、認証なし） |
+| `MCP_AUTH_TOKEN` | - | Bearer 認証トークン（HTTPでは必須、stdioでは不要） |
 
 ## トラブルシューティング
 
@@ -202,6 +201,7 @@ docker compose logs microcms-mcp
 # よくある原因
 # - dist/ が存在しない → pnpm build を実行
 # - 環境変数が未設定 → .env ファイルを確認
+# - MCP_AUTH_TOKEN is required for HTTP transport. → 空白のみではない認証トークンを設定
 # - ポートが競合 → MCP_HTTP_PORT を変更
 ```
 

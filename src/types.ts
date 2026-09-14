@@ -30,7 +30,6 @@ export interface TransportConfig {
 
 // Authentication configuration
 export interface AuthConfig {
-  enabled: boolean;
   bearerToken?: string;
 }
 
