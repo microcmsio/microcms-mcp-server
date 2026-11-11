@@ -1,11 +1,11 @@
-FROM node:22-slim
+FROM node:26.13.0-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml ./
-RUN corepack enable && pnpm install --frozen-lockfile --prod
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev
 
 COPY dist/ ./dist/
 COPY bin/ ./bin/
