@@ -1,4 +1,4 @@
-FROM node:26.13.0-slim
+FROM node:26-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
 
