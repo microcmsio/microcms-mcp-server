@@ -3,7 +3,7 @@
  * 
  * Usage:
  *   # With .env file (recommended)
- *   pnpm run debug:service-info
+ *   npm run debug:service-info
  * 
  *   # With arguments (single service)
  *   npx tsx scripts/test-service-info.ts <serviceId> <apiKey>
@@ -121,7 +121,7 @@ async function main() {
   // No configuration found
   console.error('\n❌ No configuration found!');
   console.error('\nUsage:');
-  console.error('  1. Set MICROCMS_SERVICES in .env file and run: pnpm run debug:service-info');
+  console.error('  1. Set MICROCMS_SERVICES in .env file and run: npm run debug:service-info');
   console.error('  2. Set MICROCMS_SERVICE_ID and MICROCMS_API_KEY in .env file');
   console.error('  3. Run with arguments: npx tsx scripts/test-service-info.ts <serviceId> <apiKey>');
   process.exit(1);

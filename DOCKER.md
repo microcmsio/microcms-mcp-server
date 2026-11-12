@@ -5,7 +5,7 @@ microCMS MCP Server を Docker コンテナとして起動し、HTTP トラン�
 ## 前提条件
 
 - Docker / Docker Compose がインストール済みであること
-- Node.js 18+ / pnpm がインストール済みであること（ビルド用）
+- Node.js 18+ / npm がインストール済みであること（ビルド用）
 - microCMS のサービス ID と API キーを取得済みであること
 
 ## クイックスタート
@@ -15,8 +15,8 @@ microCMS MCP Server を Docker コンテナとして起動し、HTTP トラン�
 Docker イメージはビルド済みの `dist/` ディレクトリを COPY する設計です。先にローカルでビルドしてください。
 
 ```bash
-pnpm install
-pnpm build
+npm ci
+npm run build
 ```
 
 ### 2. 環境変数の設定
@@ -199,7 +199,7 @@ Claude Code の設定ファイル（`.mcp.json` または `settings.json`）に�
 docker compose logs microcms-mcp
 
 # よくある原因
-# - dist/ が存在しない → pnpm build を実行
+# - dist/ が存在しない → npm run build を実行
 # - 環境変数が未設定 → .env ファイルを確認
 # - MCP_AUTH_TOKEN is required for HTTP transport. → 空白のみではない認証トークンを設定
 # - ポートが競合 → MCP_HTTP_PORT を変更
